@@ -100,16 +100,16 @@ export default function RevenueTimeline({ invoices }: RevenueTimelineProps) {
   };
 
   return (
-    <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
-      <div className="bg-gradient-to-r from-slate-50 to-gray-50 px-8 py-6 border-b border-gray-100">
+    <div className="bg-card rounded-2xl shadow-sm border border-themed overflow-hidden">
+      <div className="bg-base-200 px-8 py-6 border-b border-themed">
         <div className="flex items-center justify-between mb-4">
           <div className="flex items-center gap-3">
-            <div className="p-2.5 bg-gradient-to-br from-blue-500 to-cyan-500 rounded-xl shadow-lg shadow-blue-500/25">
+            <div className="p-2.5 bg-blue-500 rounded-xl shadow-lg shadow-blue-500/25">
               <TrendingUp className="h-5 w-5 text-white" />
             </div>
             <div>
-              <h3 className="text-xl font-bold text-gray-900">Revenus dans le temps</h3>
-              <p className="text-sm text-gray-600">Évolution des revenus par période</p>
+              <h3 className="text-xl font-bold text-primary">Revenus dans le temps</h3>
+              <p className="text-sm text-secondary">Évolution des revenus par période</p>
             </div>
           </div>
         </div>
@@ -122,8 +122,8 @@ export default function RevenueTimeline({ invoices }: RevenueTimelineProps) {
               onClick={() => setPeriod(p)}
               className={`px-4 py-2 rounded-xl text-sm font-medium transition-all duration-200 ${
                 period === p
-                  ? "bg-gradient-to-r from-blue-500 to-cyan-500 text-white shadow-lg shadow-blue-500/25"
-                  : "bg-white text-gray-600 border border-gray-200 hover:border-blue-300 hover:text-blue-600"
+                  ? "bg-blue-500 text-white shadow-lg shadow-blue-500/25"
+                  : "bg-card text-secondary border border-themed hover:border-blue-300 hover:text-blue-600"
               }`}
             >
               {p === "week"
@@ -140,11 +140,11 @@ export default function RevenueTimeline({ invoices }: RevenueTimelineProps) {
 
       <div className="p-8">
         {/* Total */}
-        <div className="mb-6 p-6 bg-gradient-to-r from-blue-50 to-cyan-50 rounded-xl border border-blue-200">
+        <div className="mb-6 p-6 bg-base-200 rounded-xl border border-themed">
           <div className="flex items-center justify-between">
             <div>
               <p className="text-sm font-medium text-blue-600 mb-1">Revenu total</p>
-              <p className="text-3xl font-bold text-gray-900">{formatCurrency(totalRevenue)}</p>
+              <p className="text-3xl font-bold text-primary">{formatCurrency(totalRevenue)}</p>
             </div>
             <Calendar className="h-8 w-8 text-blue-500" />
           </div>
@@ -162,13 +162,13 @@ export default function RevenueTimeline({ invoices }: RevenueTimelineProps) {
                     {/* Barre */}
                     <div className="relative w-full max-w-[40px]">
                       <div
-                        className="w-full bg-gradient-to-t from-blue-500 to-cyan-400 rounded-t-lg transition-all duration-500 hover:from-blue-600 hover:to-cyan-500 cursor-pointer shadow-lg"
+                        className="w-full bg-blue-500 rounded-t-lg transition-all duration-500 hover:bg-blue-600 cursor-pointer shadow-lg"
                         style={{ height: `${height}%` }}
                       >
                         {/* Tooltip */}
                         {data.revenue > 0 && (
                           <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none">
-                            <div className="bg-gray-900 text-white text-xs font-semibold px-3 py-2 rounded-lg shadow-xl whitespace-nowrap">
+                            <div className="bg-base-300 text-base-content text-xs font-semibold px-3 py-2 rounded-lg shadow-xl whitespace-nowrap">
                               {formatCurrency(data.revenue)}
                             </div>
                           </div>
@@ -177,7 +177,7 @@ export default function RevenueTimeline({ invoices }: RevenueTimelineProps) {
                     </div>
                   </div>
                   {/* Label */}
-                  <span className="text-xs text-gray-500 font-medium -rotate-45 origin-top-left mt-2">
+                  <span className="text-xs text-muted font-medium -rotate-45 origin-top-left mt-2">
                     {data.label}
                   </span>
                 </div>
@@ -188,8 +188,8 @@ export default function RevenueTimeline({ invoices }: RevenueTimelineProps) {
 
         {timelineData.every((d) => d.revenue === 0) && (
           <div className="text-center py-12">
-            <TrendingUp className="h-16 w-16 mx-auto text-gray-300 mb-4" />
-            <p className="text-gray-500 font-medium">Aucune donnée disponible pour cette période</p>
+            <TrendingUp className="h-16 w-16 mx-auto text-muted mb-4" />
+            <p className="text-muted font-medium">Aucune donnée disponible pour cette période</p>
           </div>
         )}
       </div>

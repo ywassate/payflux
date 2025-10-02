@@ -27,40 +27,16 @@ export default function CategoryPieChart({ invoices }: CategoryPieChartProps) {
 
   const totalInvoices = invoices.length;
 
-  // Palette de couleurs moderne avec hex
+  // Palette de couleurs moderne
   const colors = [
-    { gradient: "from-blue-500 to-cyan-500", start: "#3b82f6", end: "#06b6d4" },
-    {
-      gradient: "from-purple-500 to-pink-500",
-      start: "#a855f7",
-      end: "#ec4899",
-    },
-    {
-      gradient: "from-emerald-500 to-teal-500",
-      start: "#10b981",
-      end: "#14b8a6",
-    },
-    {
-      gradient: "from-amber-500 to-orange-500",
-      start: "#f59e0b",
-      end: "#f97316",
-    },
-    { gradient: "from-rose-500 to-red-500", start: "#f43f5e", end: "#ef4444" },
-    {
-      gradient: "from-indigo-500 to-blue-500",
-      start: "#6366f1",
-      end: "#3b82f6",
-    },
-    {
-      gradient: "from-violet-500 to-purple-500",
-      start: "#8b5cf6",
-      end: "#a855f7",
-    },
-    {
-      gradient: "from-lime-500 to-green-500",
-      start: "#84cc16",
-      end: "#22c55e",
-    },
+    { color: "#3b82f6" }, // blue-500
+    { color: "#a855f7" }, // purple-500
+    { color: "#10b981" }, // emerald-500
+    { color: "#f59e0b" }, // amber-500
+    { color: "#f43f5e" }, // rose-500
+    { color: "#6366f1" }, // indigo-500
+    { color: "#8b5cf6" }, // violet-500
+    { color: "#84cc16" }, // lime-500
   ];
 
   const formatCurrency = (amount: number) => {
@@ -85,9 +61,7 @@ export default function CategoryPieChart({ invoices }: CategoryPieChartProps) {
       percentage,
       startAngle,
       endAngle,
-      colorGradient: colorScheme.gradient,
-      colorStart: colorScheme.start,
-      colorEnd: colorScheme.end,
+      color: colorScheme.color,
     };
   });
 
@@ -134,17 +108,17 @@ export default function CategoryPieChart({ invoices }: CategoryPieChartProps) {
   };
 
   return (
-    <div className="bg-white rounded-xl border border-gray-200 p-6 h-full flex flex-col">
+    <div className="bg-card rounded-xl border border-themed p-6 h-full flex flex-col">
       <div className="mb-6">
-        <h3 className="text-lg font-semibold text-gray-900">
+        <h3 className="text-lg font-semibold text-primary">
           Répartition par catégories
         </h3>
-        <p className="text-sm text-gray-500">Distribution des factures</p>
+        <p className="text-sm text-muted">Distribution des factures</p>
       </div>
 
       <div className="flex-1 flex items-center justify-center">
         {categories.length === 0 ? (
-          <div className="text-center py-8 text-gray-400">
+          <div className="text-center py-8 text-muted">
             <FolderOpen className="h-12 w-12 mx-auto mb-2 opacity-50" />
             <p>Aucune facture disponible</p>
           </div>
@@ -157,22 +131,6 @@ export default function CategoryPieChart({ invoices }: CategoryPieChartProps) {
                   viewBox="0 0 100 100"
                   className="w-full h-full transform -rotate-180"
                 >
-                  {/* Définir les gradients */}
-                  <defs>
-                    {segments.map((segment, index) => (
-                      <linearGradient
-                        key={index}
-                        id={`gradient-${index}`}
-                        x1="0%"
-                        y1="0%"
-                        x2="100%"
-                        y2="100%"
-                      >
-                        <stop offset="0%" stopColor={segment.colorStart} />
-                        <stop offset="100%" stopColor={segment.colorEnd} />
-                      </linearGradient>
-                    ))}
-                  </defs>
                   {segments.map((segment, index) => (
                     <path
                       key={index}
@@ -183,19 +141,19 @@ export default function CategoryPieChart({ invoices }: CategoryPieChartProps) {
                       )}
                       className="hover:opacity-80 transition-opacity duration-200 cursor-pointer"
                       style={{
-                        fill: `url(#gradient-${index})`,
+                        fill: segment.color,
                       }}
                     />
                   ))}
-                  {/* Cercle central blanc */}
-                  <circle cx="50" cy="50" r="25" fill="white" />
+                  {/* Cercle central */}
+                  <circle cx="50" cy="50" r="25" className="fill-card" />
                 </svg>
                 {/* Centre du diagramme */}
                 <div className="absolute inset-0 flex flex-col items-center justify-center">
-                  <p className="text-2xl font-bold text-gray-900">
+                  <p className="text-2xl font-bold text-primary">
                     {totalInvoices}
                   </p>
-                  <p className="text-xs text-gray-500">Factures</p>
+                  <p className="text-xs text-muted">Factures</p>
                 </div>
               </div>
             </div>
@@ -205,24 +163,25 @@ export default function CategoryPieChart({ invoices }: CategoryPieChartProps) {
               {segments.map((segment, index) => (
                 <div
                   key={index}
-                  className="flex items-center gap-4 p-3 rounded-lg hover:bg-gray-50 transition-colors"
+                  className="flex items-center gap-4 p-3 rounded-lg hover:bg-base-200 transition-colors"
                 >
                   <div
-                    className={`w-3 h-3 rounded-full bg-gradient-to-r ${segment.colorGradient} flex-shrink-0`}
+                    className="w-3 h-3 rounded-full flex-shrink-0"
+                    style={{ backgroundColor: segment.color }}
                   />
                   <div className="flex-1 min-w-0">
-                    <p className="text-sm font-medium text-gray-900 truncate">
+                    <p className="text-sm font-medium text-primary truncate">
                       {segment.name}
                     </p>
-                    <p className="text-xs text-gray-500">
+                    <p className="text-xs text-muted">
                       {segment.count} facture{segment.count > 1 ? "s" : ""}
                     </p>
                   </div>
                   <div className="text-right flex-shrink-0">
-                    <p className="text-sm font-semibold text-gray-900">
+                    <p className="text-sm font-semibold text-primary">
                       {segment.percentage.toFixed(1)}%
                     </p>
-                    <p className="text-xs text-gray-500">
+                    <p className="text-xs text-muted">
                       {formatCurrency(segment.total)}
                     </p>
                   </div>

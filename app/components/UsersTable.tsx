@@ -64,9 +64,9 @@ export default function UsersTable({ users, currentUserId }: UsersTableProps) {
 
   if (users.length === 0) {
     return (
-      <div className="text-center py-16 bg-gradient-to-br from-gray-50 to-gray-100 rounded-2xl border-2 border-dashed border-gray-300">
-        <UserIcon className="h-16 w-16 mx-auto text-gray-400 mb-4" />
-        <p className="text-gray-500 text-lg font-medium">Aucun utilisateur trouvé</p>
+      <div className="text-center py-16 bg-base-200 rounded-2xl border-2 border-dashed border-themed">
+        <UserIcon className="h-16 w-16 mx-auto text-muted mb-4" />
+        <p className="text-muted text-lg font-medium">Aucun utilisateur trouvé</p>
       </div>
     );
   }
@@ -80,10 +80,10 @@ export default function UsersTable({ users, currentUserId }: UsersTableProps) {
         return (
           <div
             key={user.id}
-            className={`relative group bg-gradient-to-r ${
+            className={`relative group ${
               isCurrentUser
-                ? "from-blue-50 to-cyan-50 border-blue-200"
-                : "from-white to-gray-50 border-gray-200"
+                ? "bg-base-200 border-blue-200"
+                : "bg-card border-themed"
             } rounded-2xl border-2 p-6 hover:shadow-lg transition-all duration-300`}
           >
             <div className="flex flex-col md:flex-row md:items-center gap-6">
@@ -96,10 +96,10 @@ export default function UsersTable({ users, currentUserId }: UsersTableProps) {
                       alt={user.name}
                       width={64}
                       height={64}
-                      className="rounded-2xl border-2 border-gray-200 shadow-md"
+                      className="rounded-2xl border-2 border-themed shadow-md"
                     />
                   ) : (
-                    <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-blue-500 to-purple-500 flex items-center justify-center text-white text-2xl font-bold shadow-md border-2 border-gray-200">
+                    <div className="w-16 h-16 rounded-2xl bg-blue-500 flex items-center justify-center text-white text-2xl font-bold shadow-md border-2 border-themed">
                       {user.name.charAt(0).toUpperCase()}
                     </div>
                   )}
@@ -111,15 +111,15 @@ export default function UsersTable({ users, currentUserId }: UsersTableProps) {
                 </div>
 
                 <div className="flex-1">
-                  <h3 className="text-xl font-bold text-gray-900 mb-1">
+                  <h3 className="text-xl font-bold text-primary mb-1">
                     {user.name}
                   </h3>
-                  <div className="flex flex-col sm:flex-row sm:items-center gap-2 text-sm text-gray-600">
+                  <div className="flex flex-col sm:flex-row sm:items-center gap-2 text-sm text-secondary">
                     <div className="flex items-center gap-1.5">
                       <Mail className="h-4 w-4" />
                       <span>{user.email}</span>
                     </div>
-                    <span className="hidden sm:inline text-gray-300">•</span>
+                    <span className="hidden sm:inline text-muted">•</span>
                     <div className="flex items-center gap-1.5">
                       <FileText className="h-4 w-4" />
                       <span>{user._count.invoices} facture(s)</span>
@@ -165,7 +165,7 @@ export default function UsersTable({ users, currentUserId }: UsersTableProps) {
 
                 {/* Actions */}
                 <button
-                  className="p-3 text-red-500 hover:bg-red-50 rounded-xl transition-all duration-200 disabled:opacity-30 disabled:cursor-not-allowed group-hover:scale-105"
+                  className="p-3 text-red-500 hover:bg-card-hover rounded-xl transition-all duration-200 disabled:opacity-30 disabled:cursor-not-allowed group-hover:scale-105"
                   onClick={() => handleDelete(user.id)}
                   disabled={isCurrentUser || loadingId === user.id}
                   title={
@@ -181,7 +181,7 @@ export default function UsersTable({ users, currentUserId }: UsersTableProps) {
 
             {/* Indicateur de chargement */}
             {loadingId === user.id && (
-              <div className="absolute inset-0 bg-white/50 backdrop-blur-sm rounded-2xl flex items-center justify-center">
+              <div className="absolute inset-0 bg-card/50 backdrop-blur-sm rounded-2xl flex items-center justify-center">
                 <div className="w-8 h-8 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
               </div>
             )}

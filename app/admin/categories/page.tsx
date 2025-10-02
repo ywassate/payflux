@@ -23,8 +23,8 @@ export default async function CategoriesPage() {
   return (
     <Wrapper>
       <div className="space-y-8">
-        {/* Header moderne avec gradient */}
-        <div className="bg-gradient-to-r from-amber-600 to-orange-500 rounded-2xl shadow-xl p-8 text-white">
+        {/* Header moderne */}
+        <div className="bg-amber-600 rounded-2xl shadow-xl p-8 text-white">
           <div className="flex items-center gap-4">
             <div className="p-4 bg-white/10 backdrop-blur-sm rounded-2xl border border-white/20">
               <FolderOpen className="h-10 w-10" />

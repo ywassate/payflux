@@ -1,9 +1,145 @@
 @import "tailwindcss";
-@plugin "daisyui";
+
+@theme {
+  /* Couleurs de base - Light */
+  --color-base-100: rgb(255 255 255);
+  --color-base-200: rgb(248 250 252);
+  --color-base-300: rgb(226 232 240);
+  --color-base-content: rgb(31 41 55);
+
+  /* Couleurs de texte - Light */
+  --color-text-primary: rgb(17 24 39);
+  --color-text-secondary: rgb(107 114 128);
+  --color-text-muted: rgb(156 163 175);
+
+  /* Bordures - Light */
+  --color-border: rgb(229 231 235);
+  --color-border-hover: rgb(209 213 219);
+
+  /* Carte/Surface - Light */
+  --color-card: rgb(255 255 255);
+  --color-card-hover: rgb(249 250 251);
+
+  /* Navbar/Sidebar - Light (même que card) */
+  --color-navbar: rgb(255 255 255);
+  --color-sidebar: rgb(255 255 255);
+}
+
+/* Thème dark avec variables CSS */
+[data-theme="payfluxDark"] {
+  /* Couleurs de base - Dark */
+  --color-base-100: rgb(17 24 39);
+  --color-base-200: rgb(31 41 55);
+  --color-base-300: rgb(55 65 81);
+  --color-base-content: rgb(229 231 235);
+
+  /* Couleurs de texte - Dark */
+  --color-text-primary: rgb(243 244 246);
+  --color-text-secondary: rgb(161, 164, 169);
+  --color-text-muted: rgb(211 211 211);
+
+  /* Bordures - Dark */
+  --color-border: rgb(55 65 81);
+  --color-border-hover: rgb(75 85 99);
+
+  /* Carte/Surface - Dark */
+  --color-card: rgb(31 41 55);
+  --color-card-hover: rgb(55 65 81);
+
+  /* Navbar/Sidebar - Dark (plus foncé que card) */
+  --color-navbar: rgb(15 23 42);
+  --color-sidebar: rgb(15 23 42);
+}
+
+/* Classes utilitaires pour les couleurs de base */
+.bg-base-100 {
+  background-color: var(--color-base-100);
+}
+
+.bg-base-200 {
+  background-color: var(--color-base-200);
+}
+
+.bg-base-300 {
+  background-color: var(--color-base-300);
+}
+
+.text-base-content {
+  color: var(--color-base-content);
+}
+
+/* Classes utilitaires personnalisées */
+.bg-card {
+  background-color: var(--color-card);
+}
+
+.bg-card-hover:hover {
+  background-color: var(--color-card-hover);
+}
+
+.bg-navbar {
+  background-color: var(--color-navbar);
+}
+
+.bg-sidebar {
+  background-color: var(--color-sidebar);
+}
+
+.text-primary {
+  color: var(--color-text-primary);
+}
+
+.text-secondary {
+  color: var(--color-text-secondary);
+}
+
+.text-muted {
+  color: var(--color-text-muted);
+}
+
+.border-themed {
+  border-color: var(--color-border);
+}
+
+.border-themed-hover:hover {
+  border-color: var(--color-border-hover);
+}
 
 /* Styles personnalisés */
 :root {
   --sidebar-width: 280px;
+}
+
+/* Placeholders - adaptatifs au thème */
+::placeholder {
+  color: var(--color-text-muted);
+  opacity: 0.6;
+}
+
+[data-theme="payfluxDark"] ::placeholder {
+  color: var(--color-text-muted);
+  opacity: 0.7;
+}
+
+/* Options de select - adaptatifs au thème */
+select option {
+  background-color: var(--color-card);
+  color: var(--color-text-primary);
+}
+
+[data-theme="payfluxDark"] select option {
+  background-color: var(--color-card);
+  color: var(--color-text-primary);
+}
+
+/* Select text color */
+select {
+  color: var(--color-text-primary);
+}
+
+input {
+  color: var(--color-text-primary);
+  background-color: var(--color-card);
 }
 
 /* Scrollbar personnalisée */
@@ -13,16 +149,16 @@
 }
 
 ::-webkit-scrollbar-track {
-  background: #f1f5f9;
+  background: var(--color-base-200);
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #cbd5e1;
+  background: var(--color-border);
   border-radius: 4px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #94a3b8;
+  background: var(--color-border-hover);
 }
 
 /* Animations */

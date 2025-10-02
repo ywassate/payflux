@@ -111,18 +111,18 @@ export default function DashboardStats({ invoices }: DashboardStatsProps) {
       {stats.map((stat, index) => (
         <div
           key={index}
-          className="bg-white rounded-xl border border-gray-200 p-6 hover:shadow-lg transition-all duration-200 fade-in"
+          className="bg-card rounded-xl border border-themed p-6 hover:shadow-lg transition-all duration-200 fade-in"
           style={{ animationDelay: `${index * 0.1}s` }}
         >
           <div className="flex items-start justify-between">
             <div className="flex-1">
-              <p className="text-sm font-medium text-gray-600 mb-2">
+              <p className="text-sm font-medium text-secondary mb-2">
                 {stat.title}
               </p>
-              <h3 className="text-2xl font-bold text-gray-900 mb-1">
+              <h3 className="text-2xl font-bold text-primary mb-1">
                 {stat.value}
               </h3>
-              <p className="text-xs text-gray-500">{stat.description}</p>
+              <p className="text-xs text-muted">{stat.description}</p>
 
               {/* Trend indicator */}
               {stat.trend !== undefined && (
@@ -139,7 +139,7 @@ export default function DashboardStats({ invoices }: DashboardStatsProps) {
                   >
                     {Math.abs(stat.trend).toFixed(1)}%
                   </span>
-                  <span className="text-xs text-gray-500">vs mois dernier</span>
+                  <span className="text-xs text-muted">vs mois dernier</span>
                 </div>
               )}
 

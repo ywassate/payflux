@@ -52,8 +52,8 @@ export default async function AdminUsersPage() {
   return (
     <Wrapper>
       <div className="max-w-7xl mx-auto space-y-8">
-        {/* Header moderne avec gradient */}
-        <div className="bg-gradient-to-r from-emerald-600 to-teal-500 rounded-2xl shadow-xl p-8 text-white">
+        {/* Header moderne */}
+        <div className="bg-emerald-600 rounded-2xl shadow-xl p-8 text-white">
           <div className="flex items-center gap-4">
             <div className="p-4 bg-white/10 backdrop-blur-sm rounded-2xl border border-white/20">
               <Shield className="h-10 w-10" />
@@ -69,50 +69,50 @@ export default async function AdminUsersPage() {
 
         {/* Statistiques modernes */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <div className="bg-white rounded-2xl border border-gray-100 p-6 shadow-sm hover:shadow-md transition-shadow duration-300">
+          <div className="bg-card rounded-xl border border-themed p-6 shadow-sm hover:shadow-md transition-shadow duration-300">
             <div className="flex items-center justify-between mb-4">
               <div className="p-3 bg-blue-100 rounded-xl">
                 <Users className="h-6 w-6 text-blue-600" />
               </div>
-              <span className="text-xs font-semibold text-gray-500 uppercase tracking-wide">Total</span>
+              <span className="text-xs font-semibold text-muted uppercase tracking-wide">Total</span>
             </div>
-            <div className="text-3xl font-bold text-gray-900 mb-1">{users.length}</div>
-            <div className="text-sm text-gray-600">Utilisateurs enregistrés</div>
+            <div className="text-3xl font-bold text-primary mb-1">{users.length}</div>
+            <div className="text-sm text-secondary">Utilisateurs enregistrés</div>
           </div>
 
-          <div className="bg-white rounded-2xl border border-gray-100 p-6 shadow-sm hover:shadow-md transition-shadow duration-300">
+          <div className="bg-card rounded-xl border border-themed p-6 shadow-sm hover:shadow-md transition-shadow duration-300">
             <div className="flex items-center justify-between mb-4">
               <div className="p-3 bg-emerald-100 rounded-xl">
                 <Shield className="h-6 w-6 text-emerald-600" />
               </div>
-              <span className="text-xs font-semibold text-gray-500 uppercase tracking-wide">Admins</span>
+              <span className="text-xs font-semibold text-muted uppercase tracking-wide">Admins</span>
             </div>
-            <div className="text-3xl font-bold text-gray-900 mb-1">{adminCount}</div>
-            <div className="text-sm text-gray-600">Administrateurs actifs</div>
+            <div className="text-3xl font-bold text-primary mb-1">{adminCount}</div>
+            <div className="text-sm text-secondary">Administrateurs actifs</div>
           </div>
 
-          <div className="bg-white rounded-2xl border border-gray-100 p-6 shadow-sm hover:shadow-md transition-shadow duration-300">
+          <div className="bg-card rounded-xl border border-themed p-6 shadow-sm hover:shadow-md transition-shadow duration-300">
             <div className="flex items-center justify-between mb-4">
               <div className="p-3 bg-purple-100 rounded-xl">
                 <UserCog className="h-6 w-6 text-purple-600" />
               </div>
-              <span className="text-xs font-semibold text-gray-500 uppercase tracking-wide">Clients</span>
+              <span className="text-xs font-semibold text-muted uppercase tracking-wide">Clients</span>
             </div>
-            <div className="text-3xl font-bold text-gray-900 mb-1">{clientCount}</div>
-            <div className="text-sm text-gray-600">Comptes clients</div>
+            <div className="text-3xl font-bold text-primary mb-1">{clientCount}</div>
+            <div className="text-sm text-secondary">Comptes clients</div>
           </div>
         </div>
 
         {/* Informations importantes */}
-        <div className="bg-gradient-to-r from-blue-50 to-cyan-50 rounded-2xl border border-blue-200 p-6">
+        <div className="bg-card rounded-xl border border-themed p-6 shadow-sm">
           <div className="flex gap-4">
             <div className="flex-shrink-0">
-              <div className="p-2 bg-blue-500 rounded-xl">
+              <div className="p-3 bg-blue-100 rounded-xl">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   fill="none"
                   viewBox="0 0 24 24"
-                  className="w-6 h-6 text-white"
+                  className="w-6 h-6 text-blue-600"
                 >
                   <path
                     strokeLinecap="round"
@@ -125,15 +125,15 @@ export default async function AdminUsersPage() {
               </div>
             </div>
             <div>
-              <h3 className="font-bold text-gray-900 text-lg mb-2">Permissions des rôles</h3>
-              <div className="space-y-2 text-gray-700">
-                <div className="flex items-start gap-2">
+              <h3 className="text-lg font-semibold text-primary mb-3">Permissions des rôles</h3>
+              <div className="space-y-3 text-sm text-secondary">
+                <div className="flex items-start gap-3">
                   <Shield className="h-5 w-5 text-emerald-600 flex-shrink-0 mt-0.5" />
                   <div>
                     <span className="font-semibold text-emerald-900">Administrateur :</span> Accès complet - Création, modification et suppression de factures. Gestion des utilisateurs et des permissions.
                   </div>
                 </div>
-                <div className="flex items-start gap-2">
+                <div className="flex items-start gap-3">
                   <UserCog className="h-5 w-5 text-purple-600 flex-shrink-0 mt-0.5" />
                   <div>
                     <span className="font-semibold text-purple-900">Client :</span> Accès restreint - Consultation uniquement de ses propres factures.
@@ -145,10 +145,10 @@ export default async function AdminUsersPage() {
         </div>
 
         {/* Table des utilisateurs */}
-        <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
-          <div className="bg-gradient-to-r from-slate-50 to-gray-50 px-8 py-6 border-b border-gray-100">
-            <h2 className="text-2xl font-bold text-gray-900">Liste des utilisateurs</h2>
-            <p className="text-gray-600 mt-1">Gérez les comptes et les rôles</p>
+        <div className="bg-card rounded-xl shadow-sm border border-themed overflow-hidden">
+          <div className="bg-base-200 px-8 py-6 border-b border-themed">
+            <h2 className="text-2xl font-bold text-primary">Liste des utilisateurs</h2>
+            <p className="text-secondary mt-1">Gérez les comptes et les rôles</p>
           </div>
           <div className="p-8">
             <UsersTable users={usersWithImages as any} currentUserId={userId} />

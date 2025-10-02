@@ -19,10 +19,10 @@ export default async function Home() {
       <Wrapper>
         <div className="flex items-center justify-center min-h-[60vh]">
           <div className="text-center">
-            <h1 className="text-3xl font-bold text-gray-900 mb-4">
+            <h1 className="text-3xl font-bold text-primary mb-4">
               Veuillez vous connecter
             </h1>
-            <p className="text-gray-600">
+            <p className="text-secondary">
               Connectez-vous pour accéder à votre dashboard
             </p>
           </div>
@@ -50,8 +50,8 @@ export default async function Home() {
   return (
     <Wrapper>
       <div className="space-y-8">
-        {/* Header moderne avec gradient */}
-        <div className="bg-gradient-to-r from-blue-600 to-purple-600 rounded-2xl shadow-xl p-8 text-white">
+        {/* Header moderne */}
+        <div className="bg-blue-600 rounded-2xl shadow-xl p-8 text-white">
           <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
             <div className="flex items-center gap-4">
               <div className="p-4 bg-white/10 backdrop-blur-sm rounded-2xl border border-white/20">
@@ -79,9 +79,9 @@ export default async function Home() {
         </div>
         {/* Contenu principal en deux colonnes */}
         <div className="space-y-6">
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 items-start">
+          <div className="grid grid-cols-1 xl:grid-cols-3 gap-6 items-start">
             {/* Colonne principale - 2/3 */}
-            <div className="lg:col-span-2 flex flex-col gap-6 h-full">
+            <div className="xl:col-span-2 flex flex-col gap-6 h-full">
               {/* Statistiques modernes style Nexus */}
               <ModernDashboardStats invoices={invoices} />
               <SalesMetricsChart invoices={invoices} />
@@ -99,13 +99,13 @@ export default async function Home() {
           </div>
         </div>
         {/* Liste complète des factures */}
-        <div className="bg-white rounded-xl border border-gray-200 p-6">
+        <div className="bg-card rounded-xl border border-themed p-6">
           <div className="flex items-center justify-between mb-6">
             <div>
-              <h2 className="text-lg font-semibold text-gray-900">
+              <h2 className="text-lg font-semibold text-primary">
                 Toutes les factures
               </h2>
-              <p className="text-sm text-gray-500">
+              <p className="text-sm text-muted">
                 Gérez et suivez toutes vos factures
               </p>
             </div>

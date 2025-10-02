@@ -34,13 +34,13 @@ export default function InvoiceStatusChart({ invoices }: InvoiceStatusChartProps
 
   const totalInvoices = invoices.length;
 
-  // Couleurs modernes avec hex pour chaque statut
-  const statusColors: Record<string, { gradient: string; start: string; end: string }> = {
-    DRAFT: { gradient: "from-amber-500 to-yellow-500", start: "#f59e0b", end: "#eab308" },
-    SENT: { gradient: "from-blue-500 to-cyan-500", start: "#3b82f6", end: "#06b6d4" },
-    PAID: { gradient: "from-green-500 to-emerald-500", start: "#22c55e", end: "#10b981" },
-    OVERDUE: { gradient: "from-red-500 to-rose-500", start: "#ef4444", end: "#f43f5e" },
-    CANCELLED: { gradient: "from-gray-500 to-slate-500", start: "#6b7280", end: "#64748b" },
+  // Couleurs pour chaque statut
+  const statusColors: Record<string, { color: string }> = {
+    DRAFT: { color: "#f59e0b" }, // amber-500
+    SENT: { color: "#3b82f6" }, // blue-500
+    PAID: { color: "#22c55e" }, // green-500
+    OVERDUE: { color: "#ef4444" }, // red-500
+    CANCELLED: { color: "#6b7280" }, // gray-500
   };
 
   const formatCurrency = (amount: number) => {
@@ -59,24 +59,22 @@ export default function InvoiceStatusChart({ invoices }: InvoiceStatusChartProps
     return {
       ...stat,
       percentage,
-      colorGradient: colorScheme.gradient,
-      colorStart: colorScheme.start,
-      colorEnd: colorScheme.end,
+      color: colorScheme.color,
     };
   });
 
   return (
-    <div className="bg-white rounded-xl border border-gray-200 p-6 shadow-sm">
+    <div className="bg-card rounded-xl border border-themed p-6 shadow-sm">
       <div className="mb-6">
-        <h3 className="text-lg font-semibold text-gray-900">
+        <h3 className="text-lg font-semibold text-primary">
           Répartition par statut
         </h3>
-        <p className="text-sm text-gray-500">Distribution des factures</p>
+        <p className="text-sm text-muted">Distribution des factures</p>
       </div>
 
       <div>
         {statuses.length === 0 ? (
-          <div className="text-center py-8 text-gray-400">
+          <div className="text-center py-8 text-muted">
             <FileText className="h-12 w-12 mx-auto mb-2 opacity-50" />
             <p>Aucune facture disponible</p>
           </div>
@@ -88,32 +86,33 @@ export default function InvoiceStatusChart({ invoices }: InvoiceStatusChartProps
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-3">
                     <div
-                      className={`w-3 h-3 rounded-full bg-gradient-to-r ${segment.colorGradient}`}
+                      className="w-3 h-3 rounded-full"
+                      style={{ backgroundColor: segment.color }}
                     />
                     <div>
-                      <p className="text-sm font-semibold text-gray-900">
+                      <p className="text-sm font-semibold text-primary">
                         {segment.label}
                       </p>
-                      <p className="text-xs text-gray-500">
+                      <p className="text-xs text-muted">
                         {segment.count} facture{segment.count > 1 ? "s" : ""}
                       </p>
                     </div>
                   </div>
                   <div className="text-right">
-                    <p className="text-sm font-bold text-gray-900">
+                    <p className="text-sm font-bold text-primary">
                       {segment.percentage.toFixed(1)}%
                     </p>
-                    <p className="text-xs text-gray-500">
+                    <p className="text-xs text-muted">
                       {formatCurrency(segment.total)}
                     </p>
                   </div>
                 </div>
 
                 {/* Barre de progression */}
-                <div className="relative h-8 bg-gray-100 rounded-lg overflow-hidden">
+                <div className="relative h-8 bg-card-hover rounded-lg overflow-hidden">
                   <div
-                    className={`absolute inset-y-0 left-0 bg-gradient-to-r ${segment.colorGradient} rounded-lg transition-all duration-500 ease-out flex items-center justify-end pr-3`}
-                    style={{ width: `${segment.percentage}%` }}
+                    className="absolute inset-y-0 left-0 rounded-lg transition-all duration-500 ease-out flex items-center justify-end pr-3"
+                    style={{ width: `${segment.percentage}%`, backgroundColor: segment.color }}
                   >
                     {segment.percentage > 10 && (
                       <span className="text-xs font-semibold text-white">
@@ -126,12 +125,12 @@ export default function InvoiceStatusChart({ invoices }: InvoiceStatusChartProps
             ))}
 
             {/* Total */}
-            <div className="pt-4 border-t border-gray-200">
+            <div className="pt-4 border-t border-themed">
               <div className="flex items-center justify-between">
-                <p className="text-sm font-semibold text-gray-900">
+                <p className="text-sm font-semibold text-primary">
                   Total des factures
                 </p>
-                <p className="text-lg font-bold text-gray-900">
+                <p className="text-lg font-bold text-primary">
                   {totalInvoices}
                 </p>
               </div>

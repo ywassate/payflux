@@ -52,8 +52,8 @@ export default async function InvoicesPage() {
   return (
     <Wrapper>
       <div className="space-y-8">
-        {/* Header moderne avec gradient */}
-        <div className="bg-gradient-to-r from-blue-600 to-cyan-500 rounded-2xl shadow-xl p-8 text-white">
+        {/* Header moderne */}
+        <div className="bg-blue-600 rounded-2xl shadow-xl p-8 text-white">
           <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
             <div className="flex items-center gap-4">
               <div className="p-4 bg-white/10 backdrop-blur-sm rounded-2xl border border-white/20">
@@ -84,13 +84,13 @@ export default async function InvoicesPage() {
         <InvoiceStatusChart invoices={invoices as any} />
 
         {/* Liste des factures */}
-        <div className="bg-white rounded-xl border border-gray-200 p-6 shadow-sm">
+        <div className="bg-card rounded-xl border border-themed p-6 shadow-sm">
           <div className="flex items-center justify-between mb-6">
             <div>
-              <h2 className="text-lg font-semibold text-gray-900">
+              <h2 className="text-lg font-semibold text-primary">
                 Toutes les factures
               </h2>
-              <p className="text-sm text-gray-500">
+              <p className="text-sm text-muted">
                 Gérez et suivez toutes vos factures
               </p>
             </div>

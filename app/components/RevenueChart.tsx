@@ -46,13 +46,13 @@ export default function RevenueChart({ invoices }: RevenueChartProps) {
   };
 
   return (
-    <div className="bg-white rounded-xl border border-gray-200 p-6">
+    <div className="bg-card rounded-xl border border-themed p-6">
       <div className="flex items-center justify-between mb-6">
         <div>
-          <h3 className="text-lg font-semibold text-gray-900">
+          <h3 className="text-lg font-semibold text-primary">
             Revenus des 6 derniers mois
           </h3>
-          <p className="text-sm text-gray-500">Factures payées uniquement</p>
+          <p className="text-sm text-muted">Factures payées uniquement</p>
         </div>
         <div className="p-2 bg-blue-100 rounded-lg">
           <BarChart3 className="h-5 w-5 text-blue-600" />
@@ -63,14 +63,14 @@ export default function RevenueChart({ invoices }: RevenueChartProps) {
         {monthlyData.map((data, index) => (
           <div key={index} className="space-y-2">
             <div className="flex items-center justify-between text-sm">
-              <span className="font-medium text-gray-700 w-12">{data.month}</span>
-              <span className="font-semibold text-gray-900">
+              <span className="font-medium text-secondary w-12">{data.month}</span>
+              <span className="font-semibold text-primary">
                 {formatCurrency(data.revenue)}
               </span>
             </div>
-            <div className="w-full bg-gray-100 rounded-full h-2 overflow-hidden">
+            <div className="w-full bg-base-200 rounded-full h-2 overflow-hidden">
               <div
-                className="bg-gradient-to-r from-blue-500 to-cyan-500 h-full rounded-full transition-all duration-500"
+                className="bg-blue-500 h-full rounded-full transition-all duration-500"
                 style={{
                   width: `${(data.revenue / maxRevenue) * 100}%`,
                 }}
@@ -81,7 +81,7 @@ export default function RevenueChart({ invoices }: RevenueChartProps) {
       </div>
 
       {monthlyData.every((d) => d.revenue === 0) && (
-        <div className="text-center py-8 text-gray-400">
+        <div className="text-center py-8 text-muted">
           <p>Aucune donnée disponible</p>
         </div>
       )}

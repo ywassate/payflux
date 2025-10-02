@@ -126,20 +126,20 @@ export default function SalesMetricsChart({
   };
 
   return (
-    <div className="bg-white rounded-xl border border-gray-200 overflow-hidden">
+    <div className="bg-card rounded-xl border border-themed overflow-hidden">
       <div className="px-6 py-5">
         <div className="flex items-center justify-between mb-4">
-          <h3 className="text-lg font-semibold text-gray-900">
+          <h3 className="text-lg font-semibold text-primary">
             Statistiques des revenus
           </h3>
 
-          <div className="flex gap-2 bg-gray-100 rounded-lg p-1">
+          <div className="flex gap-2 bg-card-hover rounded-lg p-1">
             <button
               onClick={() => setTimeScale("monthly")}
               className={`px-4 py-2 rounded-md text-sm font-medium transition-all duration-200 ${
                 timeScale === "monthly"
-                  ? "bg-white text-gray-900 shadow-sm"
-                  : "text-gray-600 hover:text-gray-900"
+                  ? "bg-card text-primary shadow-sm"
+                  : "text-secondary hover:text-primary"
               }`}
             >
               Mensuel
@@ -148,8 +148,8 @@ export default function SalesMetricsChart({
               onClick={() => setTimeScale("yearly")}
               className={`px-4 py-2 rounded-md text-sm font-medium transition-all duration-200 ${
                 timeScale === "yearly"
-                  ? "bg-white text-gray-900 shadow-sm"
-                  : "text-gray-600 hover:text-gray-900"
+                  ? "bg-card text-primary shadow-sm"
+                  : "text-secondary hover:text-primary"
               }`}
             >
               Annuel
@@ -160,8 +160,8 @@ export default function SalesMetricsChart({
         <div className="flex flex-wrap gap-6">
           <div className="flex items-center gap-2">
             <div className="w-2 h-2 bg-green-500 rounded-full"></div>
-            <span className="text-sm text-gray-600">Ventes période</span>
-            <span className="text-sm font-bold text-gray-900">
+            <span className="text-sm text-secondary">Ventes période</span>
+            <span className="text-sm font-bold text-primary">
               {realtimeSales}
             </span>
             <div className="flex items-center gap-2">
@@ -180,7 +180,7 @@ export default function SalesMetricsChart({
                   {growth.toFixed(1)}%
                 </span>
               </div>
-              <span className="text-xs text-gray-400">
+              <span className="text-xs text-muted">
                 vs {timeScale === "monthly" ? "mois" : "année"} précédent
               </span>
             </div>
@@ -188,22 +188,22 @@ export default function SalesMetricsChart({
 
           <div className="flex items-center gap-2">
             <div className="w-2 h-2 bg-purple-500 rounded-full"></div>
-            <span className="text-sm text-gray-600">Revenus</span>
-            <span className="text-sm font-bold text-gray-900">
+            <span className="text-sm text-secondary">Revenus</span>
+            <span className="text-sm font-bold text-primary">
               {formatCurrency(revenue)}
             </span>
-            <span className="text-xs text-gray-400">
+            <span className="text-xs text-muted">
               {timeScale === "monthly" ? "ce mois" : "cette année"}
             </span>
           </div>
 
           <div className="flex items-center gap-2">
             <div className="w-2 h-2 bg-red-500 rounded-full"></div>
-            <span className="text-sm text-gray-600">Taux paiement</span>
-            <span className="text-sm font-bold text-gray-900">
+            <span className="text-sm text-secondary">Taux paiement</span>
+            <span className="text-sm font-bold text-primary">
               {customerRetention}%
             </span>
-            <span className="text-xs text-gray-400">factures payées</span>
+            <span className="text-xs text-muted">factures payées</span>
           </div>
         </div>
       </div>
@@ -229,10 +229,10 @@ export default function SalesMetricsChart({
 
               return uniqueValues.map((value, index) => (
                 <div key={index} className="flex items-center">
-                  <span className="text-xs text-gray-400 w-8 text-right mr-2">
+                  <span className="text-xs text-muted w-8 text-right mr-2">
                     {value}
                   </span>
-                  <div className="flex-1 h-px bg-gray-200"></div>
+                  <div className="flex-1 h-px bg-border-themed"></div>
                 </div>
               ));
             })()}
@@ -258,7 +258,7 @@ export default function SalesMetricsChart({
                         }}
                       >
                         <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none z-10">
-                          <div className="bg-gray-900 text-white text-xs font-semibold px-2 py-1 rounded shadow-xl whitespace-nowrap">
+                          <div className="bg-primary text-card text-xs font-semibold px-2 py-1 rounded shadow-xl whitespace-nowrap">
                             {item.total} facture{item.total > 1 ? "s" : ""}
                           </div>
                         </div>
@@ -276,7 +276,7 @@ export default function SalesMetricsChart({
                         }}
                       >
                         <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none z-10">
-                          <div className="bg-gray-900 text-white text-xs font-semibold px-2 py-1 rounded shadow-xl whitespace-nowrap">
+                          <div className="bg-primary text-card text-xs font-semibold px-2 py-1 rounded shadow-xl whitespace-nowrap">
                             {item.paid} payée{item.paid > 1 ? "s" : ""}
                           </div>
                         </div>
@@ -292,21 +292,21 @@ export default function SalesMetricsChart({
         <div className="flex justify-between mt-2 pl-10">
           {data.map((item, index) => (
             <div key={index} className="flex-1 text-center">
-              <span className="text-xs text-gray-500 font-medium">
+              <span className="text-xs text-muted font-medium">
                 {item.label}
               </span>
             </div>
           ))}
         </div>
 
-        <div className="flex items-center justify-center gap-6 mt-6 pt-4 border-t border-gray-100">
+        <div className="flex items-center justify-center gap-6 mt-6 pt-4 border-t border-themed">
           <div className="flex items-center gap-2">
             <div className="w-3 h-3 bg-orange-400 rounded"></div>
-            <span className="text-sm text-gray-600">Factures totales</span>
+            <span className="text-sm text-secondary">Factures totales</span>
           </div>
           <div className="flex items-center gap-2">
             <div className="w-3 h-3 bg-blue-500 rounded"></div>
-            <span className="text-sm text-gray-600">Factures payées</span>
+            <span className="text-sm text-secondary">Factures payées</span>
           </div>
         </div>
       </div>

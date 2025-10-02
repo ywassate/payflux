@@ -144,7 +144,7 @@ export default function InvoiceForm({
   return (
     <form onSubmit={handleSubmit} className="space-y-8 max-w-7xl mx-auto">
       {/* Header avec actions - Design moderne */}
-      <div className="bg-gradient-to-r from-blue-600 to-cyan-500 rounded-2xl shadow-xl p-8 text-white">
+      <div className="bg-blue-600 rounded-2xl shadow-xl p-8 text-white">
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
           <div>
             <h2 className="text-3xl font-bold mb-2">
@@ -178,7 +178,7 @@ export default function InvoiceForm({
             )}
             <button
               type="submit"
-              className="px-6 py-2.5 bg-white text-blue-600 hover:bg-blue-50 rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all duration-200 flex items-center gap-2"
+              className="px-6 py-2.5 bg-card text-blue-600 hover:bg-base-200 rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all duration-200 flex items-center gap-2"
               disabled={loading}
             >
               <Save className="h-5 w-5" />
@@ -189,17 +189,17 @@ export default function InvoiceForm({
       </div>
 
       {/* Informations générales - Design moderne avec inputs flottants */}
-      <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
-        <div className="bg-gradient-to-r from-blue-50 to-cyan-50 px-8 py-6 border-b border-gray-100">
+      <div className="bg-card rounded-2xl shadow-sm border border-themed overflow-hidden">
+        <div className="bg-base-200 px-8 py-6 border-b border-themed">
           <div className="flex items-center gap-3">
             <div className="p-2.5 bg-blue-500 rounded-xl shadow-lg shadow-blue-500/25">
               <Info className="h-5 w-5 text-white" />
             </div>
             <div>
-              <h3 className="text-xl font-bold text-gray-900">
+              <h3 className="text-xl font-bold text-primary">
                 Informations générales
               </h3>
-              <p className="text-sm text-gray-600">Détails de la facture</p>
+              <p className="text-sm text-secondary">Détails de la facture</p>
             </div>
           </div>
         </div>
@@ -210,7 +210,7 @@ export default function InvoiceForm({
               <input
                 type="text"
                 id="name"
-                className="peer w-full px-4 py-3.5 border-2 border-gray-200 rounded-xl focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 transition-all duration-200 outline-none placeholder-transparent"
+                className="peer w-full px-4 py-3.5 border-2 border-themed rounded-xl focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 transition-all duration-200 outline-none placeholder-transparent"
                 value={formData.name}
                 onChange={(e) => handleChange("name", e.target.value)}
                 placeholder="Nom de la facture"
@@ -218,7 +218,7 @@ export default function InvoiceForm({
               />
               <label
                 htmlFor="name"
-                className="absolute left-4 -top-2.5 bg-white px-2 text-sm font-semibold text-gray-600 transition-all duration-200 peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-400 peer-placeholder-shown:top-3.5 peer-focus:-top-2.5 peer-focus:text-sm peer-focus:text-blue-600 peer-focus:font-semibold"
+                className="absolute left-4 -top-2.5 bg-card px-2 text-sm font-semibold text-secondary transition-all duration-200 peer-placeholder-shown:text-base peer-placeholder-shown:text-muted peer-placeholder-shown:top-3.5 peer-focus:-top-2.5 peer-focus:text-sm peer-focus:text-blue-600 peer-focus:font-semibold"
               >
                 Nom de la facture *
               </label>
@@ -227,7 +227,7 @@ export default function InvoiceForm({
             <div className="relative group">
               <select
                 id="category"
-                className="peer w-full px-4 py-3.5 border-2 border-gray-200 rounded-xl focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 transition-all duration-200 outline-none appearance-none bg-white"
+                className="peer w-full px-4 py-3.5 border-2 border-themed rounded-xl focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 transition-all duration-200 outline-none appearance-none bg-card"
                 value={formData.categoryId}
                 onChange={(e) => handleChange("categoryId", e.target.value)}
               >
@@ -240,43 +240,43 @@ export default function InvoiceForm({
               </select>
               <label
                 htmlFor="category"
-                className="absolute left-4 -top-2.5 bg-white px-2 text-sm font-semibold text-gray-600"
+                className="absolute left-4 -top-2.5 bg-card px-2 text-sm font-semibold text-secondary"
               >
                 Catégorie
               </label>
             </div>
 
             <div className="relative group">
-              <Calendar className="absolute left-4 top-3.5 h-5 w-5 text-gray-400 pointer-events-none z-10" />
+              <Calendar className="absolute left-4 top-3.5 h-5 w-5 text-muted pointer-events-none z-10" />
               <input
                 type="date"
                 id="invoiceDate"
-                className="peer w-full pl-12 pr-4 py-3.5 border-2 border-gray-200 rounded-xl focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 transition-all duration-200 outline-none"
+                className="peer w-full pl-12 pr-4 py-3.5 border-2 border-themed rounded-xl focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 transition-all duration-200 outline-none"
                 value={formData.invoiceDate}
                 onChange={(e) => handleChange("invoiceDate", e.target.value)}
                 required
               />
               <label
                 htmlFor="invoiceDate"
-                className="absolute left-4 -top-2.5 bg-white px-2 text-sm font-semibold text-gray-600"
+                className="absolute left-4 -top-2.5 bg-card px-2 text-sm font-semibold text-secondary"
               >
                 Date d'émission *
               </label>
             </div>
 
             <div className="relative group">
-              <Calendar className="absolute left-4 top-3.5 h-5 w-5 text-gray-400 pointer-events-none z-10" />
+              <Calendar className="absolute left-4 top-3.5 h-5 w-5 text-muted pointer-events-none z-10" />
               <input
                 type="date"
                 id="dueDate"
-                className="peer w-full pl-12 pr-4 py-3.5 border-2 border-gray-200 rounded-xl focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 transition-all duration-200 outline-none"
+                className="peer w-full pl-12 pr-4 py-3.5 border-2 border-themed rounded-xl focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 transition-all duration-200 outline-none"
                 value={formData.dueDate}
                 onChange={(e) => handleChange("dueDate", e.target.value)}
                 required
               />
               <label
                 htmlFor="dueDate"
-                className="absolute left-4 -top-2.5 bg-white px-2 text-sm font-semibold text-gray-600"
+                className="absolute left-4 -top-2.5 bg-card px-2 text-sm font-semibold text-secondary"
               >
                 Date d'échéance *
               </label>
@@ -285,7 +285,7 @@ export default function InvoiceForm({
             <div className="relative group md:col-span-2">
               <select
                 id="status"
-                className="peer w-full px-4 py-3.5 border-2 border-gray-200 rounded-xl focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 transition-all duration-200 outline-none appearance-none bg-white"
+                className="peer w-full px-4 py-3.5 border-2 border-themed rounded-xl focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 transition-all duration-200 outline-none appearance-none bg-card"
                 value={formData.status}
                 onChange={(e) =>
                   handleChange("status", e.target.value as InvoiceStatus)
@@ -299,7 +299,7 @@ export default function InvoiceForm({
               </select>
               <label
                 htmlFor="status"
-                className="absolute left-4 -top-2.5 bg-white px-2 text-sm font-semibold text-gray-600"
+                className="absolute left-4 -top-2.5 bg-card px-2 text-sm font-semibold text-secondary"
               >
                 Statut
               </label>
@@ -311,15 +311,15 @@ export default function InvoiceForm({
       {/* Émetteur et Client côte à côte - Design moderne */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
         {/* Émetteur */}
-        <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden hover:shadow-md transition-shadow duration-300">
-          <div className="bg-gradient-to-r from-green-50 to-emerald-50 px-8 py-6 border-b border-gray-100">
+        <div className="bg-card rounded-2xl shadow-sm border border-themed overflow-hidden hover:shadow-md transition-shadow duration-300">
+          <div className="bg-base-200 px-8 py-6 border-b border-themed">
             <div className="flex items-center gap-3">
               <div className="p-2.5 bg-green-500 rounded-xl shadow-lg shadow-green-500/25">
                 <Building2 className="h-5 w-5 text-white" />
               </div>
               <div>
-                <h3 className="text-xl font-bold text-gray-900">Émetteur</h3>
-                <p className="text-sm text-gray-600">Vos informations</p>
+                <h3 className="text-xl font-bold text-primary">Émetteur</h3>
+                <p className="text-sm text-secondary">Vos informations</p>
               </div>
             </div>
           </div>
@@ -329,7 +329,7 @@ export default function InvoiceForm({
               <input
                 type="text"
                 id="issuerName"
-                className="peer w-full px-4 py-3.5 border-2 border-gray-200 rounded-xl focus:border-green-500 focus:ring-4 focus:ring-green-500/10 transition-all duration-200 outline-none placeholder-transparent"
+                className="peer w-full px-4 py-3.5 border-2 border-themed rounded-xl focus:border-green-500 focus:ring-4 focus:ring-green-500/10 transition-all duration-200 outline-none placeholder-transparent"
                 value={formData.issuerName}
                 onChange={(e) => handleChange("issuerName", e.target.value)}
                 placeholder="Nom de l'entreprise"
@@ -337,7 +337,7 @@ export default function InvoiceForm({
               />
               <label
                 htmlFor="issuerName"
-                className="absolute left-4 -top-2.5 bg-white px-2 text-sm font-semibold text-gray-600 transition-all duration-200 peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-400 peer-placeholder-shown:top-3.5 peer-focus:-top-2.5 peer-focus:text-sm peer-focus:text-green-600 peer-focus:font-semibold"
+                className="absolute left-4 -top-2.5 bg-card px-2 text-sm font-semibold text-secondary transition-all duration-200 peer-placeholder-shown:text-base peer-placeholder-shown:text-muted peer-placeholder-shown:top-3.5 peer-focus:-top-2.5 peer-focus:text-sm peer-focus:text-green-600 peer-focus:font-semibold"
               >
                 Nom de l'entreprise *
               </label>
@@ -346,7 +346,7 @@ export default function InvoiceForm({
             <div className="relative group">
               <textarea
                 id="issuerAddress"
-                className="peer w-full px-4 py-3.5 border-2 border-gray-200 rounded-xl focus:border-green-500 focus:ring-4 focus:ring-green-500/10 transition-all duration-200 outline-none placeholder-transparent resize-none"
+                className="peer w-full px-4 py-3.5 border-2 border-themed rounded-xl focus:border-green-500 focus:ring-4 focus:ring-green-500/10 transition-all duration-200 outline-none placeholder-transparent resize-none"
                 value={formData.issuerAddress}
                 onChange={(e) => handleChange("issuerAddress", e.target.value)}
                 rows={4}
@@ -355,7 +355,7 @@ export default function InvoiceForm({
               />
               <label
                 htmlFor="issuerAddress"
-                className="absolute left-4 -top-2.5 bg-white px-2 text-sm font-semibold text-gray-600 transition-all duration-200 peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-400 peer-placeholder-shown:top-3.5 peer-focus:-top-2.5 peer-focus:text-sm peer-focus:text-green-600 peer-focus:font-semibold"
+                className="absolute left-4 -top-2.5 bg-card px-2 text-sm font-semibold text-secondary transition-all duration-200 peer-placeholder-shown:text-base peer-placeholder-shown:text-muted peer-placeholder-shown:top-3.5 peer-focus:-top-2.5 peer-focus:text-sm peer-focus:text-green-600 peer-focus:font-semibold"
               >
                 Adresse complète *
               </label>
@@ -364,15 +364,15 @@ export default function InvoiceForm({
         </div>
 
         {/* Client */}
-        <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden hover:shadow-md transition-shadow duration-300">
-          <div className="bg-gradient-to-r from-purple-50 to-pink-50 px-8 py-6 border-b border-gray-100">
+        <div className="bg-card rounded-2xl shadow-sm border border-themed overflow-hidden hover:shadow-md transition-shadow duration-300">
+          <div className="bg-base-200 px-8 py-6 border-b border-themed">
             <div className="flex items-center gap-3">
               <div className="p-2.5 bg-purple-500 rounded-xl shadow-lg shadow-purple-500/25">
                 <User className="h-5 w-5 text-white" />
               </div>
               <div>
-                <h3 className="text-xl font-bold text-gray-900">Client</h3>
-                <p className="text-sm text-gray-600">Informations du client</p>
+                <h3 className="text-xl font-bold text-primary">Client</h3>
+                <p className="text-sm text-secondary">Informations du client</p>
               </div>
             </div>
           </div>
@@ -382,7 +382,7 @@ export default function InvoiceForm({
               <input
                 type="text"
                 id="clientName"
-                className="peer w-full px-4 py-3.5 border-2 border-gray-200 rounded-xl focus:border-purple-500 focus:ring-4 focus:ring-purple-500/10 transition-all duration-200 outline-none placeholder-transparent"
+                className="peer w-full px-4 py-3.5 border-2 border-themed rounded-xl focus:border-purple-500 focus:ring-4 focus:ring-purple-500/10 transition-all duration-200 outline-none placeholder-transparent"
                 value={formData.clientName}
                 onChange={(e) => handleChange("clientName", e.target.value)}
                 placeholder="Nom du client"
@@ -390,7 +390,7 @@ export default function InvoiceForm({
               />
               <label
                 htmlFor="clientName"
-                className="absolute left-4 -top-2.5 bg-white px-2 text-sm font-semibold text-gray-600 transition-all duration-200 peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-400 peer-placeholder-shown:top-3.5 peer-focus:-top-2.5 peer-focus:text-sm peer-focus:text-purple-600 peer-focus:font-semibold"
+                className="absolute left-4 -top-2.5 bg-card px-2 text-sm font-semibold text-secondary transition-all duration-200 peer-placeholder-shown:text-base peer-placeholder-shown:text-muted peer-placeholder-shown:top-3.5 peer-focus:-top-2.5 peer-focus:text-sm peer-focus:text-purple-600 peer-focus:font-semibold"
               >
                 Nom du client *
               </label>
@@ -399,7 +399,7 @@ export default function InvoiceForm({
             <div className="relative group">
               <textarea
                 id="clientAddress"
-                className="peer w-full px-4 py-3.5 border-2 border-gray-200 rounded-xl focus:border-purple-500 focus:ring-4 focus:ring-purple-500/10 transition-all duration-200 outline-none placeholder-transparent resize-none"
+                className="peer w-full px-4 py-3.5 border-2 border-themed rounded-xl focus:border-purple-500 focus:ring-4 focus:ring-purple-500/10 transition-all duration-200 outline-none placeholder-transparent resize-none"
                 value={formData.clientAddress}
                 onChange={(e) => handleChange("clientAddress", e.target.value)}
                 rows={4}
@@ -408,7 +408,7 @@ export default function InvoiceForm({
               />
               <label
                 htmlFor="clientAddress"
-                className="absolute left-4 -top-2.5 bg-white px-2 text-sm font-semibold text-gray-600 transition-all duration-200 peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-400 peer-placeholder-shown:top-3.5 peer-focus:-top-2.5 peer-focus:text-sm peer-focus:text-purple-600 peer-focus:font-semibold"
+                className="absolute left-4 -top-2.5 bg-card px-2 text-sm font-semibold text-secondary transition-all duration-200 peer-placeholder-shown:text-base peer-placeholder-shown:text-muted peer-placeholder-shown:top-3.5 peer-focus:-top-2.5 peer-focus:text-sm peer-focus:text-purple-600 peer-focus:font-semibold"
               >
                 Adresse complète *
               </label>
@@ -419,14 +419,14 @@ export default function InvoiceForm({
                 <input
                   type="email"
                   id="clientEmail"
-                  className="peer w-full px-4 py-3.5 border-2 border-gray-200 rounded-xl focus:border-purple-500 focus:ring-4 focus:ring-purple-500/10 transition-all duration-200 outline-none placeholder-transparent"
+                  className="peer w-full px-4 py-3.5 border-2 border-themed rounded-xl focus:border-purple-500 focus:ring-4 focus:ring-purple-500/10 transition-all duration-200 outline-none placeholder-transparent"
                   value={formData.clientEmail}
                   onChange={(e) => handleChange("clientEmail", e.target.value)}
                   placeholder="Email"
                 />
                 <label
                   htmlFor="clientEmail"
-                  className="absolute left-4 -top-2.5 bg-white px-2 text-sm font-semibold text-gray-600 transition-all duration-200 peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-400 peer-placeholder-shown:top-3.5 peer-focus:-top-2.5 peer-focus:text-sm peer-focus:text-purple-600 peer-focus:font-semibold"
+                  className="absolute left-4 -top-2.5 bg-card px-2 text-sm font-semibold text-secondary transition-all duration-200 peer-placeholder-shown:text-base peer-placeholder-shown:text-muted peer-placeholder-shown:top-3.5 peer-focus:-top-2.5 peer-focus:text-sm peer-focus:text-purple-600 peer-focus:font-semibold"
                 >
                   Email
                 </label>
@@ -435,14 +435,14 @@ export default function InvoiceForm({
                 <input
                   type="tel"
                   id="clientPhone"
-                  className="peer w-full px-4 py-3.5 border-2 border-gray-200 rounded-xl focus:border-purple-500 focus:ring-4 focus:ring-purple-500/10 transition-all duration-200 outline-none placeholder-transparent"
+                  className="peer w-full px-4 py-3.5 border-2 border-themed rounded-xl focus:border-purple-500 focus:ring-4 focus:ring-purple-500/10 transition-all duration-200 outline-none placeholder-transparent"
                   value={formData.clientPhone}
                   onChange={(e) => handleChange("clientPhone", e.target.value)}
                   placeholder="Téléphone"
                 />
                 <label
                   htmlFor="clientPhone"
-                  className="absolute left-4 -top-2.5 bg-white px-2 text-sm font-semibold text-gray-600 transition-all duration-200 peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-400 peer-placeholder-shown:top-3.5 peer-focus:-top-2.5 peer-focus:text-sm peer-focus:text-purple-600 peer-focus:font-semibold"
+                  className="absolute left-4 -top-2.5 bg-card px-2 text-sm font-semibold text-secondary transition-all duration-200 peer-placeholder-shown:text-base peer-placeholder-shown:text-muted peer-placeholder-shown:top-3.5 peer-focus:-top-2.5 peer-focus:text-sm peer-focus:text-purple-600 peer-focus:font-semibold"
                 >
                   Téléphone
                 </label>
@@ -453,12 +453,12 @@ export default function InvoiceForm({
       </div>
 
       {/* Lignes de facture - Design moderne avec table élégante */}
-      <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
-        <div className="bg-gradient-to-r from-amber-50 to-orange-50 px-8 py-6 border-b border-gray-100">
+      <div className="bg-card rounded-2xl shadow-sm border border-themed overflow-hidden">
+        <div className="bg-base-200 px-8 py-6 border-b border-themed">
           <div className="flex items-center justify-between">
             <div>
-              <h3 className="text-xl font-bold text-gray-900">Lignes de facture</h3>
-              <p className="text-sm text-gray-600">Détails des prestations</p>
+              <h3 className="text-xl font-bold text-primary">Lignes de facture</h3>
+              <p className="text-sm text-secondary">Détails des prestations</p>
             </div>
             <button
               type="button"
@@ -477,13 +477,13 @@ export default function InvoiceForm({
               {formData.lines.map((line, index) => (
                 <div
                   key={index}
-                  className="relative grid grid-cols-12 gap-4 p-4 bg-gray-50 hover:bg-gray-100 rounded-xl border border-gray-200 transition-all duration-200 group"
+                  className="relative grid grid-cols-12 gap-4 p-4 bg-base-200 hover:bg-card-hover rounded-xl border border-themed transition-all duration-200 group"
                 >
                   <div className="col-span-12 md:col-span-5">
                     <div className="relative">
                       <input
                         type="text"
-                        className="w-full px-4 py-2.5 border-2 border-gray-200 rounded-lg focus:border-amber-500 focus:ring-4 focus:ring-amber-500/10 transition-all duration-200 outline-none"
+                        className="w-full px-4 py-2.5 border-2 border-themed rounded-lg focus:border-amber-500 focus:ring-4 focus:ring-amber-500/10 transition-all duration-200 outline-none"
                         value={line.description}
                         onChange={(e) =>
                           handleLineChange(index, "description", e.target.value)
@@ -497,7 +497,7 @@ export default function InvoiceForm({
                   <div className="col-span-4 md:col-span-2">
                     <input
                       type="number"
-                      className="w-full px-4 py-2.5 border-2 border-gray-200 rounded-lg focus:border-amber-500 focus:ring-4 focus:ring-amber-500/10 transition-all duration-200 outline-none text-center"
+                      className="w-full px-4 py-2.5 border-2 border-themed rounded-lg focus:border-amber-500 focus:ring-4 focus:ring-amber-500/10 transition-all duration-200 outline-none text-center"
                       value={line.quantity}
                       onChange={(e) =>
                         handleLineChange(
@@ -515,7 +515,7 @@ export default function InvoiceForm({
                   <div className="col-span-4 md:col-span-2">
                     <input
                       type="number"
-                      className="w-full px-4 py-2.5 border-2 border-gray-200 rounded-lg focus:border-amber-500 focus:ring-4 focus:ring-amber-500/10 transition-all duration-200 outline-none text-right"
+                      className="w-full px-4 py-2.5 border-2 border-themed rounded-lg focus:border-amber-500 focus:ring-4 focus:ring-amber-500/10 transition-all duration-200 outline-none text-right"
                       value={line.unitPrice}
                       onChange={(e) =>
                         handleLineChange(
@@ -532,7 +532,7 @@ export default function InvoiceForm({
                   </div>
 
                   <div className="col-span-3 md:col-span-2 flex items-center justify-end">
-                    <span className="text-lg font-bold text-gray-900">
+                    <span className="text-lg font-bold text-primary">
                       {formatCurrency(line.quantity * line.unitPrice)}
                     </span>
                   </div>
@@ -558,23 +558,23 @@ export default function InvoiceForm({
       {/* TVA et Totaux - Design moderne */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
         {/* TVA */}
-        <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
-          <div className="bg-gradient-to-r from-indigo-50 to-blue-50 px-8 py-6 border-b border-gray-100">
-            <h3 className="text-xl font-bold text-gray-900">Configuration TVA</h3>
-            <p className="text-sm text-gray-600">Taxe sur la valeur ajoutée</p>
+        <div className="bg-card rounded-2xl shadow-sm border border-themed overflow-hidden">
+          <div className="bg-base-200 px-8 py-6 border-b border-themed">
+            <h3 className="text-xl font-bold text-primary">Configuration TVA</h3>
+            <p className="text-sm text-secondary">Taxe sur la valeur ajoutée</p>
           </div>
 
           <div className="p-8 space-y-6">
-            <label className="flex items-center gap-4 p-4 bg-gradient-to-r from-indigo-50 to-blue-50 rounded-xl cursor-pointer border-2 border-transparent hover:border-indigo-200 transition-all duration-200">
+            <label className="flex items-center gap-4 p-4 bg-base-200 rounded-xl cursor-pointer border-2 border-transparent hover:border-indigo-200 transition-all duration-200">
               <input
                 type="checkbox"
-                className="w-6 h-6 rounded-lg border-2 border-gray-300 text-indigo-600 focus:ring-4 focus:ring-indigo-500/20 transition-all duration-200"
+                className="w-6 h-6 rounded-lg border-2 border-themed text-indigo-600 focus:ring-4 focus:ring-indigo-500/20 transition-all duration-200"
                 checked={formData.vatActive}
                 onChange={(e) => handleChange("vatActive", e.target.checked)}
               />
               <div>
-                <span className="font-semibold text-gray-900 block">Activer la TVA</span>
-                <span className="text-sm text-gray-600">Appliquer la taxe sur cette facture</span>
+                <span className="font-semibold text-primary block">Activer la TVA</span>
+                <span className="text-sm text-secondary">Appliquer la taxe sur cette facture</span>
               </div>
             </label>
 
@@ -583,7 +583,7 @@ export default function InvoiceForm({
                 <input
                   type="number"
                   id="vatRate"
-                  className="peer w-full px-4 py-3.5 border-2 border-gray-200 rounded-xl focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/10 transition-all duration-200 outline-none"
+                  className="peer w-full px-4 py-3.5 border-2 border-themed rounded-xl focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/10 transition-all duration-200 outline-none"
                   value={formData.vatRate}
                   onChange={(e) =>
                     handleChange("vatRate", parseFloat(e.target.value) || 0)
@@ -593,7 +593,7 @@ export default function InvoiceForm({
                 />
                 <label
                   htmlFor="vatRate"
-                  className="absolute left-4 -top-2.5 bg-white px-2 text-sm font-semibold text-gray-600"
+                  className="absolute left-4 -top-2.5 bg-card px-2 text-sm font-semibold text-secondary"
                 >
                   Taux de TVA (%)
                 </label>
@@ -603,7 +603,7 @@ export default function InvoiceForm({
         </div>
 
         {/* Totaux */}
-        <div className="bg-gradient-to-br from-blue-500 via-cyan-500 to-teal-500 rounded-2xl shadow-xl p-8 text-white">
+        <div className="bg-blue-500 rounded-2xl shadow-xl p-8 text-white">
           <h3 className="text-2xl font-bold mb-8 flex items-center gap-2">
             Totaux
             <span className="text-blue-100 text-sm font-normal">Récapitulatif</span>
@@ -641,15 +641,15 @@ export default function InvoiceForm({
       </div>
 
       {/* Notes - Design moderne */}
-      <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
-        <div className="bg-gradient-to-r from-slate-50 to-gray-50 px-8 py-6 border-b border-gray-100">
-          <h3 className="text-xl font-bold text-gray-900">Notes additionnelles</h3>
-          <p className="text-sm text-gray-600">Conditions, mentions légales...</p>
+      <div className="bg-card rounded-2xl shadow-sm border border-themed overflow-hidden">
+        <div className="bg-base-200 px-8 py-6 border-b border-themed">
+          <h3 className="text-xl font-bold text-primary">Notes additionnelles</h3>
+          <p className="text-sm text-secondary">Conditions, mentions légales...</p>
         </div>
 
         <div className="p-8">
           <textarea
-            className="w-full px-4 py-3.5 border-2 border-gray-200 rounded-xl focus:border-slate-500 focus:ring-4 focus:ring-slate-500/10 transition-all duration-200 outline-none resize-none"
+            className="w-full px-4 py-3.5 border-2 border-themed rounded-xl focus:border-slate-500 focus:ring-4 focus:ring-slate-500/10 transition-all duration-200 outline-none resize-none"
             value={formData.notes}
             onChange={(e) => handleChange("notes", e.target.value)}
             rows={5}

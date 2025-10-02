@@ -220,27 +220,27 @@ export default function ModernDashboardStats({
   };
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+    <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4">
       {stats.map((stat, index) => {
         const colors = getColorClasses(stat.color);
         return (
           <div
             key={index}
-            className="bg-white rounded-xl border border-gray-200 p-5 hover:shadow-lg transition-all duration-200"
+            className="bg-card rounded-xl border border-themed p-5 hover:shadow-lg transition-all duration-200"
           >
             {/* Icon et Label */}
             <div className="flex items-center gap-3 mb-4">
               <div className={`p-2 ${colors.bg} bg-opacity-10 rounded-lg`}>
                 <stat.icon className={`h-5 w-5 ${colors.text} `} />
               </div>
-              <span className="text-sm font-semibold text-gray-900">
+              <span className="text-sm font-semibold text-primary">
                 {stat.label}
               </span>
             </div>
 
             {/* Valeur principale */}
             <div className="mb-3">
-              <h3 className="text-2xl font-bold text-gray-900">{stat.value}</h3>
+              <h3 className="text-2xl font-bold text-primary">{stat.value}</h3>
             </div>
 
             {/* Croissance */}
@@ -262,7 +262,7 @@ export default function ModernDashboardStats({
                 <span
                   className={`text-sm font-semibold ${
                     stat.isPercentage
-                      ? "text-gray-700"
+                      ? "text-secondary"
                       : stat.invertColors
                       ? stat.growth <= 0
                         ? "text-green-600"
@@ -276,7 +276,7 @@ export default function ModernDashboardStats({
                   {stat.growth.toFixed(stat.isPercentage ? 1 : 2)}%
                 </span>
               </div>
-              <span className="text-xs text-gray-400">{stat.growthLabel}</span>
+              <span className="text-xs text-muted">{stat.growthLabel}</span>
             </div>
           </div>
         );

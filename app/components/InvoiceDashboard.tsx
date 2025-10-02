@@ -61,9 +61,9 @@ export default function InvoiceDashboard({
         categories={categories}
       />
 
-      <div className="bg-base-100 rounded-lg p-4">
-        <div className="flex justify-between items-center mb-4">
-          <h2 className="text-md font-bold">
+      <div className="bg-card rounded-xl border border-themed">
+        <div className="flex justify-between items-center px-6 pt-6 pb-4">
+          <h2 className="text-lg font-semibold text-primary">
             {filteredInvoices.length} facture(s) trouvée(s)
           </h2>
         </div>
