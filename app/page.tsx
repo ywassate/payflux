@@ -1,103 +1,122 @@
-import Image from "next/image";
+import Wrapper from "./components/Wrapper";
+import ModernDashboardStats from "./components/ModernDashboardStats";
+import SalesMetricsChart from "./components/SalesMetricsChart";
+import RecentInvoices from "./components/RecentInvoices";
+import InvoiceDashboard from "./components/InvoiceDashboard";
+import prisma from "./lib/prisma";
+import CategoryPieChart from "./components/CategoryPieChart";
+import { getInvoices, getCategories } from "./actions";
+import { currentUser } from "@clerk/nextjs/server";
+import { Plus, TrendingUp } from "lucide-react";
+import Link from "next/link";
 
-export default function Home() {
-  return (
-    <div className="font-sans grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20">
-      <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="font-mono list-inside list-decimal text-sm/6 text-center sm:text-left">
-          <li className="mb-2 tracking-[-.01em]">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] font-mono font-semibold px-1 py-0.5 rounded">
-              app/page.tsx
-            </code>
-            .
-          </li>
-          <li className="tracking-[-.01em]">
-            Save and see your changes instantly.
-          </li>
-        </ol>
+export default async function Home() {
+  // Vérifier l'authentification
+  const sessionUser = await currentUser();
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:w-auto"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 w-full sm:w-auto md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
+  if (!sessionUser) {
+    return (
+      <Wrapper>
+        <div className="flex items-center justify-center min-h-[60vh]">
+          <div className="text-center">
+            <h1 className="text-3xl font-bold text-gray-900 mb-4">
+              Veuillez vous connecter
+            </h1>
+            <p className="text-gray-600">
+              Connectez-vous pour accéder à votre dashboard
+            </p>
+          </div>
         </div>
-      </main>
-      <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
+      </Wrapper>
+    );
+  }
+
+  // Récupérer l'utilisateur complet depuis Prisma
+  const user = await prisma.user.findUnique({
+    where: { id: sessionUser.id },
+  });
+
+  if (!user) {
+    return <div>Utilisateur non trouvé</div>;
+  }
+
+  const invoices = await getInvoices(
+    user.role === "CLIENT" ? { userId: user.id } : {}
+  );
+  const categories = await getCategories();
+
+  const isAdmin = user.role === "ADMIN";
+
+  return (
+    <Wrapper>
+      <div className="space-y-8">
+        {/* Header moderne avec gradient */}
+        <div className="bg-gradient-to-r from-blue-600 to-purple-600 rounded-2xl shadow-xl p-8 text-white">
+          <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
+            <div className="flex items-center gap-4">
+              <div className="p-4 bg-white/10 backdrop-blur-sm rounded-2xl border border-white/20">
+                <TrendingUp className="h-10 w-10" />
+              </div>
+              <div>
+                <h1 className="text-4xl font-bold mb-2">Dashboard</h1>
+                <p className="text-blue-100 text-lg">
+                  {isAdmin
+                    ? "Vue d'ensemble de votre activité"
+                    : "Consultez vos factures et paiements"}
+                </p>
+              </div>
+            </div>
+            {isAdmin && (
+              <Link
+                href="/invoices/new"
+                className="px-6 py-3 bg-white text-blue-600 hover:bg-blue-50 rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all duration-200 flex items-center gap-2 w-fit"
+              >
+                <Plus className="h-5 w-5" />
+                Nouvelle facture
+              </Link>
+            )}
+          </div>
+        </div>
+        {/* Contenu principal en deux colonnes */}
+        <div className="space-y-6">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 items-start">
+            {/* Colonne principale - 2/3 */}
+            <div className="lg:col-span-2 flex flex-col gap-6 h-full">
+              {/* Statistiques modernes style Nexus */}
+              <ModernDashboardStats invoices={invoices} />
+              <SalesMetricsChart invoices={invoices} />
+            </div>
+
+            {/* Colonne secondaire - 1/3 */}
+            <div className="flex flex-col gap-6">
+              <div className="flex-1">
+                <RecentInvoices invoices={invoices} />
+              </div>
+              <div className="flex-1">
+                <CategoryPieChart invoices={invoices} />
+              </div>
+            </div>
+          </div>
+        </div>
+        {/* Liste complète des factures */}
+        <div className="bg-white rounded-xl border border-gray-200 p-6">
+          <div className="flex items-center justify-between mb-6">
+            <div>
+              <h2 className="text-lg font-semibold text-gray-900">
+                Toutes les factures
+              </h2>
+              <p className="text-sm text-gray-500">
+                Gérez et suivez toutes vos factures
+              </p>
+            </div>
+          </div>
+
+          <InvoiceDashboard
+            initialInvoices={invoices}
+            categories={categories}
           />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
-    </div>
+        </div>
+      </div>
+    </Wrapper>
   );
 }

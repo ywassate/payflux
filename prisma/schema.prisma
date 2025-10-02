@@ -1,0 +1,86 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+enum UserRole {
+  ADMIN
+  CLIENT
+}
+
+model User {
+  id                String @id @default(uuid())
+  name              String
+  email             String @unique
+  role              UserRole @default(CLIENT)
+  invoices          Invoice[] @relation("UserInvoices")
+  createdAt         DateTime? @default(now())
+  updatedAt         DateTime? @updatedAt
+}
+
+
+
+enum InvoiceStatus {
+  DRAFT
+  APPROVED
+  SENT
+  PARTIAL
+  PAID
+  OVERDUE
+  CANCELLED
+  REFUNDED
+  REJECTED
+  PROCESSING
+}
+
+model Category {
+  id          String    @id @default(uuid())
+  name        String    @unique
+  description String?
+  invoices    Invoice[]
+  createdAt   DateTime  @default(now())
+}
+
+model Invoice {
+  id            String        @id @default(uuid())
+  invoiceNumber String        @unique
+  name          String
+  issuerName    String        @default("")
+  issuerAddress String        @default("")
+  clientName    String        @default("")
+  clientAddress String        @default("")
+  clientEmail   String        @default("")
+  clientPhone   String        @default("")
+  invoiceDate   DateTime      @default(now())
+  dueDate       DateTime
+  vatActive     Boolean       @default(false)
+  vatRate       Float         @default(20)
+  status        InvoiceStatus @default(DRAFT)
+  notes         String?
+  categoryId    String?
+  category      Category?     @relation(fields: [categoryId], references: [id])
+  lines         InvoiceLine[] @relation("InvoiceLines")
+  userId        String
+  createdById   User          @relation("UserInvoices", fields: [userId], references: [id])
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+  totalHT       Float         @default(0)
+  totalTVA      Float         @default(0)
+  totalTTC      Float         @default(0)
+}
+
+model InvoiceLine {
+  id          String   @id @default(uuid())
+  description String   @default("")
+  quantity    Int      @default(0)
+  unitPrice   Float    @default(0)
+  invoiceId   String?
+  invoice     Invoice? @relation("InvoiceLines", fields: [invoiceId], references: [id], onDelete: Cascade)
+}
