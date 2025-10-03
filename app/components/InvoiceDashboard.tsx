@@ -9,11 +9,13 @@ import InvoiceTable from "./InvoiceTable";
 interface InvoiceDashboardProps {
   initialInvoices: InvoiceWithDetails[];
   categories: { id: string; name: string }[];
+  isAdmin?: boolean;
 }
 
 export default function InvoiceDashboard({
   initialInvoices,
   categories,
+  isAdmin = true,
 }: InvoiceDashboardProps) {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedStatus, setSelectedStatus] = useState<InvoiceStatus | "ALL">(
@@ -67,7 +69,7 @@ export default function InvoiceDashboard({
             {filteredInvoices.length} facture(s) trouvée(s)
           </h2>
         </div>
-        <InvoiceTable invoices={filteredInvoices} />
+        <InvoiceTable invoices={filteredInvoices} isAdmin={isAdmin} />
       </div>
     </div>
   );

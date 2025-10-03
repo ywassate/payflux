@@ -11,12 +11,24 @@ export async function getOrCreateConversation(
   invoiceId?: string
 ) {
   try {
-    // Chercher une conversation existante pour ce client
+    // Logique de recherche :
+    // - Si invoiceId fourni : chercher par clientId + invoiceId (une facture = une conversation unique)
+    // - Sinon : chercher par clientId + subject (permet plusieurs conversations avec sujets différents)
+
+    const searchCriteria: any = {
+      clientId,
+    };
+
+    // Si c'est une conversation liée à une facture
+    if (invoiceId) {
+      searchCriteria.invoiceId = invoiceId;
+    } else if (subject) {
+      // Si c'est une conversation générale, chercher aussi par sujet
+      searchCriteria.subject = subject;
+    }
+
     let conversation = await prisma.conversation.findFirst({
-      where: {
-        clientId,
-        ...(invoiceId && { invoiceId }),
-      },
+      where: searchCriteria,
       include: {
         client: true,
         messages: {
@@ -30,7 +42,7 @@ export async function getOrCreateConversation(
       },
     });
 
-    // Si pas de conversation, en créer une
+    // Si pas de conversation avec ce sujet/facture, en créer une nouvelle
     if (!conversation) {
       conversation = await prisma.conversation.create({
         data: {
@@ -155,19 +167,24 @@ export async function sendMessage(
 
     // Notifier le destinataire si présent
     if (receiverId) {
-      await triggerPusherEvent(`user-${receiverId}`, "new-message-notification", {
-        conversationId,
-        senderId,
-        senderName: message.sender.name,
-        preview: content.substring(0, 50),
-      });
+      await triggerPusherEvent(
+        `user-${receiverId}`,
+        "new-message-notification",
+        {
+          conversationId,
+          senderId,
+          senderName: message.sender.name,
+          preview: content.substring(0, 50),
+        }
+      );
     }
 
     revalidatePath("/chat");
     return message;
   } catch (error) {
     console.error("Error in sendMessage:", error);
-    throw new Error("Impossible d'envoyer le message");
+    console.error("Error details:", JSON.stringify(error, null, 2));
+    throw error;
   }
 }
 

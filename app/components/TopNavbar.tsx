@@ -1,10 +1,12 @@
 "use client";
 
-import { useState } from "react";
-import { Bell, Moon, Sun, Settings, Menu } from "lucide-react";
-import { UserButton } from "@clerk/nextjs";
+import { useState, useEffect } from "react";
+import { Bell, Moon, Sun, Settings, Menu, MessageSquare } from "lucide-react";
+import { UserButton, useUser } from "@clerk/nextjs";
 import Link from "next/link";
 import { useTheme } from "../contexts/ThemeContext";
+import { getPusherClient } from "../lib/pusher";
+import { getUnreadMessagesCount } from "../lib/chatActions";
 
 export default function TopNavbar({
   onToggleSidebar,
@@ -12,7 +14,49 @@ export default function TopNavbar({
   onToggleSidebar?: () => void;
 }) {
   const { theme, toggleTheme } = useTheme();
+  const { user } = useUser();
   const [showNotifications, setShowNotifications] = useState(false);
+  const [unreadMessagesCount, setUnreadMessagesCount] = useState(0);
+
+  // Charger le nombre initial de messages non lus
+  useEffect(() => {
+    if (!user?.id) return;
+
+    const loadUnreadCount = async () => {
+      try {
+        const count = await getUnreadMessagesCount(user.id);
+        setUnreadMessagesCount(count);
+      } catch (error) {
+        console.error("Error loading initial unread count:", error);
+      }
+    };
+
+    loadUnreadCount();
+  }, [user?.id]);
+
+  // Écouter les nouveaux messages en temps réel avec Pusher
+  useEffect(() => {
+    if (!user?.id) return;
+
+    const pusher = getPusherClient();
+    if (!pusher) return;
+
+    const channel = pusher.subscribe(`user-${user.id}`);
+
+    channel.bind("new-message-notification", async () => {
+      // Récupérer le nouveau nombre de messages non lus
+      try {
+        const count = await getUnreadMessagesCount(user.id);
+        setUnreadMessagesCount(count);
+      } catch (error) {
+        console.error("Error fetching unread count:", error);
+      }
+    });
+
+    return () => {
+      pusher.unsubscribe(`user-${user.id}`);
+    };
+  }, [user?.id]);
 
   // Notifications mockées - à remplacer par de vraies données plus tard
   const notifications = [
@@ -70,6 +114,20 @@ export default function TopNavbar({
               {theme === "dark" ? "Mode clair" : "Mode sombre"}
             </span>
           </button>
+
+          {/* Messages */}
+          <Link
+            href="/chat"
+            className="p-2.5 rounded-xl hover:bg-base-200 transition-all duration-200 relative"
+            title="Messages"
+          >
+            <MessageSquare className="h-5 w-5 text-secondary" />
+            {unreadMessagesCount > 0 && (
+              <span className="absolute top-1 right-1 h-5 w-5 bg-blue-500 text-white text-xs font-bold rounded-full flex items-center justify-center">
+                {unreadMessagesCount > 9 ? "9+" : unreadMessagesCount}
+              </span>
+            )}
+          </Link>
 
           {/* Notifications */}
           <div className="relative">

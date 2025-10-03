@@ -6,9 +6,10 @@ import TopNavbar from "./TopNavbar";
 
 type WrapperProps = {
   children: React.ReactNode;
+  noScroll?: boolean;
 };
 
-const Wrapper = ({ children }: WrapperProps) => {
+const Wrapper = ({ children, noScroll = false }: WrapperProps) => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [isLargeScreen, setIsLargeScreen] = useState(false);
 
@@ -45,13 +46,23 @@ const Wrapper = ({ children }: WrapperProps) => {
 
       {/* Contenu principal - s'adapte automatiquement avec le sidebar */}
       <main
-        className={`pt-20 transition-all duration-300 ${
+        className={`transition-all duration-300 ${
           sidebarOpen && isLargeScreen ? "ml-[280px]" : "ml-0"
+        } ${
+          noScroll
+            ? "pt-16 h-screen overflow-hidden"
+            : "pt-20"
         }`}
       >
-        <div className="px-3 py-3 sm:px-4 sm:py-4 md:px-6 md:py-6 lg:px-8 lg:py-8 w-full max-w-full overflow-hidden">
-          <div className="w-full max-w-full">{children}</div>
-        </div>
+        {noScroll ? (
+          <div className="h-[calc(100vh-4rem)] w-full overflow-hidden">
+            {children}
+          </div>
+        ) : (
+          <div className="px-3 py-3 sm:px-4 sm:py-4 md:px-6 md:py-6 lg:px-8 lg:py-8 w-full max-w-full overflow-hidden">
+            <div className="w-full max-w-full">{children}</div>
+          </div>
+        )}
       </main>
     </div>
   );

@@ -9,9 +9,10 @@ import Link from "next/link";
 
 interface InvoiceTableProps {
   invoices: InvoiceWithDetails[];
+  isAdmin?: boolean;
 }
 
-export default function InvoiceTable({ invoices }: InvoiceTableProps) {
+export default function InvoiceTable({ invoices, isAdmin = true }: InvoiceTableProps) {
   const [loadingId, setLoadingId] = useState<string | null>(null);
   const [openDropdown, setOpenDropdown] = useState<string | null>(null);
   const [openStatusDropdown, setOpenStatusDropdown] = useState<string | null>(null);
@@ -213,10 +214,10 @@ export default function InvoiceTable({ invoices }: InvoiceTableProps) {
                         onClick={() => setOpenDropdown(null)}
                       >
                         <Eye className="h-4 w-4" />
-                        <span>Voir/Modifier</span>
+                        <span>{isAdmin ? "Voir/Modifier" : "Voir"}</span>
                       </Link>
                       <Link
-                        href={`/chat?clientId=${invoice.userId}&invoiceId=${invoice.id}`}
+                        href={`/chat?clientId=${invoice.userId}&invoiceId=${invoice.id}&subject=Facture ${invoice.invoiceNumber}`}
                         className="w-full px-4 py-2.5 text-left text-sm hover:bg-base-200 transition-colors duration-150 flex items-center gap-3 text-secondary"
                         onClick={() => setOpenDropdown(null)}
                       >
@@ -233,19 +234,21 @@ export default function InvoiceTable({ invoices }: InvoiceTableProps) {
                         <Download className="h-4 w-4" />
                         <span>Télécharger PDF</span>
                       </a>
-                      <button
-                        onClick={() => {
-                          setOpenDropdown(null);
-                          handleDelete(invoice.id);
-                        }}
-                        className="w-full px-4 py-2.5 text-left text-sm hover:bg-red-50 dark:hover:bg-red-500/10 transition-colors duration-150 flex items-center gap-3 text-red-600"
-                        disabled={loadingId === invoice.id}
-                      >
-                        <Trash2 className="h-4 w-4" />
-                        <span>
-                          {loadingId === invoice.id ? "Suppression..." : "Supprimer"}
-                        </span>
-                      </button>
+                      {isAdmin && (
+                        <button
+                          onClick={() => {
+                            setOpenDropdown(null);
+                            handleDelete(invoice.id);
+                          }}
+                          className="w-full px-4 py-2.5 text-left text-sm hover:bg-red-50 dark:hover:bg-red-500/10 transition-colors duration-150 flex items-center gap-3 text-red-600"
+                          disabled={loadingId === invoice.id}
+                        >
+                          <Trash2 className="h-4 w-4" />
+                          <span>
+                            {loadingId === invoice.id ? "Suppression..." : "Supprimer"}
+                          </span>
+                        </button>
+                      )}
                     </div>
                   </>
                 )}

@@ -7,6 +7,7 @@ import prisma from "./lib/prisma";
 import CategoryPieChart from "./components/CategoryPieChart";
 import { getInvoices, getCategories } from "./actions";
 import { currentUser } from "@clerk/nextjs/server";
+import { redirect } from "next/navigation";
 import { Plus, TrendingUp } from "lucide-react";
 import Link from "next/link";
 
@@ -31,13 +32,30 @@ export default async function Home() {
     );
   }
 
-  // Récupérer l'utilisateur complet depuis Prisma
-  const user = await prisma.user.findUnique({
+  // Récupérer ou créer l'utilisateur dans Prisma
+  let user = await prisma.user.findUnique({
     where: { id: sessionUser.id },
   });
 
+  // Si l'utilisateur n'existe pas dans Prisma, le créer
   if (!user) {
-    return <div>Utilisateur non trouvé</div>;
+    const email = sessionUser.emailAddresses[0]?.emailAddress || "";
+    const name = sessionUser.firstName && sessionUser.lastName
+      ? `${sessionUser.firstName} ${sessionUser.lastName}`
+      : sessionUser.username || email;
+
+    // Vérifier si c'est un email admin
+    const adminEmails = process.env.ADMIN_EMAILS?.split(",").map((e) => e.trim().toLowerCase()) || [];
+    const isAdminEmail = adminEmails.includes(email.toLowerCase());
+
+    user = await prisma.user.create({
+      data: {
+        id: sessionUser.id,
+        email,
+        name,
+        role: isAdminEmail ? "ADMIN" : "CLIENT",
+      },
+    });
   }
 
   const invoices = await getInvoices(
@@ -47,6 +65,12 @@ export default async function Home() {
 
   const isAdmin = user.role === "ADMIN";
 
+  // Rediriger les clients vers la page des factures
+  if (!isAdmin) {
+    redirect("/invoices");
+  }
+
+  // Dashboard Admin (existant)
   return (
     <Wrapper>
       <div className="space-y-8">
@@ -60,21 +84,17 @@ export default async function Home() {
               <div>
                 <h1 className="text-4xl font-bold mb-2">Dashboard</h1>
                 <p className="text-blue-100 text-lg">
-                  {isAdmin
-                    ? "Vue d'ensemble de votre activité"
-                    : "Consultez vos factures et paiements"}
+                  Vue d'ensemble de votre activité
                 </p>
               </div>
             </div>
-            {isAdmin && (
-              <Link
-                href="/invoices/new"
-                className="px-6 py-3 bg-white text-blue-600 hover:bg-blue-50 rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all duration-200 flex items-center gap-2 w-fit"
-              >
-                <Plus className="h-5 w-5" />
-                Nouvelle facture
-              </Link>
-            )}
+            <Link
+              href="/invoices/new"
+              className="px-6 py-3 bg-white text-blue-600 hover:bg-blue-50 rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all duration-200 flex items-center gap-2 w-fit"
+            >
+              <Plus className="h-5 w-5" />
+              Nouvelle facture
+            </Link>
           </div>
         </div>
         {/* Contenu principal en deux colonnes */}

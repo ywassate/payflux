@@ -33,6 +33,28 @@ export async function createInvoice(formData: any) {
       : 0;
     const totalTTC = totalHT + totalTVA;
 
+    // Trouver ou créer le client basé sur l'email
+    let clientUser = null;
+    if (formData.clientEmail) {
+      clientUser = await prisma.user.findUnique({
+        where: { email: formData.clientEmail },
+      });
+
+      // Si le client n'existe pas, le créer
+      if (!clientUser) {
+        clientUser = await prisma.user.create({
+          data: {
+            email: formData.clientEmail,
+            name: formData.clientName || formData.clientEmail,
+            role: "CLIENT",
+          },
+        });
+      }
+    }
+
+    // Utiliser l'ID du client si trouvé, sinon l'ID de l'admin
+    const targetUserId = clientUser ? clientUser.id : userId;
+
     // Créer la facture avec ses lignes
     const invoice = await prisma.invoice.create({
       data: {
@@ -51,7 +73,7 @@ export async function createInvoice(formData: any) {
         status: formData.status,
         notes: formData.notes,
         categoryId: formData.categoryId || null,
-        userId: userId,
+        userId: targetUserId,
         totalHT,
         totalTVA,
         totalTTC,

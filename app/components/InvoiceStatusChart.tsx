@@ -5,11 +5,15 @@ import { FileText } from "lucide-react";
 
 interface InvoiceStatusChartProps {
   invoices: InvoiceWithDetails[];
+  isAdmin?: boolean;
 }
 
-export default function InvoiceStatusChart({ invoices }: InvoiceStatusChartProps) {
+export default function InvoiceStatusChart({ invoices, isAdmin = true }: InvoiceStatusChartProps) {
   // Initialiser tous les statuts avec 0
-  const allStatuses = ["DRAFT", "SENT", "PAID", "OVERDUE", "CANCELLED"];
+  // Pour les clients, on affiche seulement PAID, OVERDUE, CANCELLED
+  const allStatuses = isAdmin
+    ? ["DRAFT", "SENT", "PAID", "OVERDUE", "CANCELLED"]
+    : ["PAID", "OVERDUE", "CANCELLED"];
 
   const statusData = allStatuses.reduce((acc, status) => {
     acc[status] = { count: 0, total: 0 };

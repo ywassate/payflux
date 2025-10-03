@@ -8,7 +8,6 @@ import { checkAndAddUser, getCurrentUser } from "../actions";
 import {
   Shield,
   FileText,
-  LayoutDashboard,
   FolderOpen,
   MessageSquare,
 } from "lucide-react";
@@ -24,7 +23,6 @@ const Navbar = ({ isOpen, onClose }: NavbarProps) => {
   const [isAdmin, setIsAdmin] = useState(false);
 
   const navLinks = [
-    { label: "Dashboard", href: "/", icon: LayoutDashboard },
     { label: "Factures", href: "/invoices", icon: FileText },
     { label: "Chat", href: "/chat", icon: MessageSquare },
     ...(isAdmin

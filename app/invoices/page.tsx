@@ -2,9 +2,10 @@ import Wrapper from "@/app/components/Wrapper";
 import { auth } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
 import { PrismaClient } from "@prisma/client";
-import { FileText, Plus } from "lucide-react";
+import { FileText, Plus, MessageSquare } from "lucide-react";
 import Link from "next/link";
 import InvoiceStatusChart from "../components/InvoiceStatusChart";
+import CategoryPieChart from "../components/CategoryPieChart";
 import InvoiceDashboard from "../components/InvoiceDashboard";
 import { getCategories } from "../actions";
 
@@ -34,9 +35,18 @@ export default async function InvoicesPage() {
 
   const isAdmin = user.role === "ADMIN";
 
-  // Récupérer les factures (toutes pour admin, seulement les siennes pour client)
+  // Récupérer les factures
+  // Admin: toutes les factures
+  // Client: seulement les factures payées, en retard ou annulées (pas DRAFT, SENT, PARTIAL)
   const invoices = await prisma.invoice.findMany({
-    where: isAdmin ? {} : { userId: userId },
+    where: isAdmin
+      ? {}
+      : {
+          userId: userId,
+          status: {
+            in: ["PAID", "OVERDUE", "CANCELLED"]
+          }
+        },
     include: {
       category: true,
       createdById: true,
@@ -48,6 +58,12 @@ export default async function InvoicesPage() {
   });
 
   const categories = await getCategories();
+
+  // Récupérer l'admin pour le lien de contact
+  const admin = await prisma.user.findFirst({
+    where: { role: "ADMIN" },
+    select: { id: true },
+  });
 
   return (
     <Wrapper>
@@ -68,7 +84,7 @@ export default async function InvoicesPage() {
                 </p>
               </div>
             </div>
-            {isAdmin && (
+            {isAdmin ? (
               <Link
                 href="/invoices/new"
                 className="px-6 py-3 bg-white text-blue-600 hover:bg-blue-50 rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all duration-200 flex items-center gap-2 w-fit"
@@ -76,12 +92,30 @@ export default async function InvoicesPage() {
                 <Plus className="h-5 w-5" />
                 Nouvelle facture
               </Link>
+            ) : (
+              <Link
+                href={`/chat${admin ? `?clientId=${user.id}` : ""}`}
+                className="px-6 py-3 bg-white text-blue-600 hover:bg-blue-50 rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all duration-200 flex items-center gap-2 w-fit"
+              >
+                <MessageSquare className="h-5 w-5" />
+                Contacter l'admin
+              </Link>
             )}
           </div>
         </div>
 
-        {/* Diagramme de répartition par statut */}
-        <InvoiceStatusChart invoices={invoices as any} />
+        {/* Répartition par statut et graphique */}
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          {/* Répartition par statut */}
+          <div className="lg:col-span-2">
+            <InvoiceStatusChart invoices={invoices as any} isAdmin={isAdmin} />
+          </div>
+
+          {/* Pie Chart */}
+          <div className="lg:col-span-1">
+            <CategoryPieChart invoices={invoices as any} />
+          </div>
+        </div>
 
         {/* Liste des factures */}
         <div className="bg-card rounded-xl border border-themed p-6 shadow-sm">
@@ -99,6 +133,7 @@ export default async function InvoicesPage() {
           <InvoiceDashboard
             initialInvoices={invoices as any}
             categories={categories}
+            isAdmin={isAdmin}
           />
         </div>
       </div>
