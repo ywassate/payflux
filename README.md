@@ -321,38 +321,6 @@ PayFlux can be deployed to any platform that supports Next.js:
 - Configure database (use PostgreSQL/MySQL for production)
 - Run migrations on production database
 
-## 🤝 Contributing
 
-Contributions are welcome! Please follow these steps:
 
-1. Fork the repository
-2. Create a feature branch (`git checkout -b feature/AmazingFeature`)
-3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
-4. Push to the branch (`git push origin feature/AmazingFeature`)
-5. Open a Pull Request
 
-## 📄 License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
-## 👤 Author
-
-**Your Name**
-- GitHub: [@yourusername](https://github.com/yourusername)
-- Email: your.email@example.com
-
-## 🙏 Acknowledgments
-
-- [Next.js](https://nextjs.org/) for the amazing framework
-- [Clerk](https://clerk.com/) for authentication
-- [Prisma](https://www.prisma.io/) for the ORM
-- [Pusher](https://pusher.com/) for real-time features
-- [Vercel](https://vercel.com/) for hosting
-
-## 📞 Support
-
-For support, email support@payflux.com or join our Discord channel.
-
----
-
-Made with ❤️ using Next.js
