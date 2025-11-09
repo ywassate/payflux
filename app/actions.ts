@@ -1,9 +1,8 @@
 "use server";
 
-import { PrismaClient, InvoiceLifecycle, InvoicePaymentStatus } from "@prisma/client";
+import { InvoiceLifecycle, InvoicePaymentStatus } from "@prisma/client";
 import { revalidatePath } from "next/cache";
-
-const prisma = new PrismaClient();
+import prisma from "@/app/lib/prisma";
 
 // Vérifier si un email est dans la liste des admins
 function isAdminEmail(email: string): boolean {

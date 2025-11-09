@@ -1,11 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
-import { PrismaClient } from "@prisma/client";
+import prisma from "@/app/lib/prisma";
 import {
   sendInvoiceReminderEmail,
   calculateDaysUntilDue,
 } from "@/app/lib/email/send-emails";
-
-const prisma = new PrismaClient();
 
 /**
  * Cron job pour envoyer des rappels 3 jours avant l'échéance

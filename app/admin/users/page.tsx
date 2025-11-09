@@ -3,10 +3,8 @@ import UsersTable from "@/app/components/UsersTable";
 import { getAllUsers } from "@/app/actions";
 import { auth, currentUser, clerkClient } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
-import { PrismaClient } from "@prisma/client";
 import { Users, Shield, UserCog } from "lucide-react";
-
-const prisma = new PrismaClient();
+import prisma from "@/app/lib/prisma";
 
 export default async function AdminUsersPage() {
   const { userId } = await auth();

@@ -1,11 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
-import { PrismaClient } from "@prisma/client";
+import prisma from "@/app/lib/prisma";
 import {
   sendInvoiceOverdueEmail,
   calculateDaysOverdue,
 } from "@/app/lib/email/send-emails";
-
-const prisma = new PrismaClient();
 
 /**
  * Cron job pour envoyer des notifications de factures en retard

@@ -1,15 +1,13 @@
 import Wrapper from "@/app/components/Wrapper";
 import { auth } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
-import { PrismaClient } from "@prisma/client";
 import { FileText, Plus, MessageSquare } from "lucide-react";
 import Link from "next/link";
 import InvoiceStatusChart from "../components/InvoiceStatusChart";
 import CategoryPieChart from "../components/CategoryPieChart";
 import InvoiceDashboard from "../components/InvoiceDashboard";
 import { getCategories } from "../actions";
-
-const prisma = new PrismaClient();
+import prisma from "@/app/lib/prisma";
 
 export default async function InvoicesPage() {
   const { userId } = await auth();

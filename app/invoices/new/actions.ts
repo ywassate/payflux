@@ -1,11 +1,9 @@
 "use server";
 
-import { PrismaClient } from "@prisma/client";
 import { auth } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
-
-const prisma = new PrismaClient();
+import prisma from "@/app/lib/prisma";
 
 const generateInvoiceNumber = async (): Promise<string> => {
   const year = new Date().getFullYear();

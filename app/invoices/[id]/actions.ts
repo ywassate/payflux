@@ -1,11 +1,9 @@
 "use server";
 
-import { PrismaClient } from "@prisma/client";
 import { auth } from "@clerk/nextjs/server";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
-
-const prisma = new PrismaClient();
+import prisma from "@/app/lib/prisma";
 
 export async function updateInvoiceAction(id: string, formData: any) {
   const { userId } = await auth();
