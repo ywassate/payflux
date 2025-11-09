@@ -57,7 +57,7 @@ export default function ModernDashboardStats({
       return (
         invDate.getMonth() === currentMonth &&
         invDate.getFullYear() === currentYear &&
-        inv.status === "PAID"
+        inv.paymentStatus === "PAID"
       );
     })
     .reduce((sum, inv) => sum + inv.totalTTC, 0);
@@ -68,7 +68,7 @@ export default function ModernDashboardStats({
       return (
         invDate.getMonth() === lastMonth &&
         invDate.getFullYear() === lastMonthYear &&
-        inv.status === "PAID"
+        inv.paymentStatus === "PAID"
       );
     })
     .reduce((sum, inv) => sum + inv.totalTTC, 0);
@@ -81,7 +81,7 @@ export default function ModernDashboardStats({
       : 0;
 
   const totalRevenue = invoices
-    .filter((inv) => inv.status === "PAID")
+    .filter((inv) => inv.paymentStatus === "PAID")
     .reduce((sum, inv) => sum + inv.totalTTC, 0);
 
   // Factures payées - Mois actuel vs mois précédent
@@ -90,7 +90,7 @@ export default function ModernDashboardStats({
     return (
       invDate.getMonth() === currentMonth &&
       invDate.getFullYear() === currentYear &&
-      inv.status === "PAID"
+      inv.paymentStatus === "PAID"
     );
   }).length;
 
@@ -99,7 +99,7 @@ export default function ModernDashboardStats({
     return (
       invDate.getMonth() === lastMonth &&
       invDate.getFullYear() === lastMonthYear &&
-      inv.status === "PAID"
+      inv.paymentStatus === "PAID"
     );
   }).length;
 
@@ -110,7 +110,7 @@ export default function ModernDashboardStats({
       ? 100
       : 0;
 
-  const paidInvoices = invoices.filter((inv) => inv.status === "PAID").length;
+  const paidInvoices = invoices.filter((inv) => inv.paymentStatus === "PAID").length;
 
   // Factures en retard - Mois actuel vs mois précédent
   const currentMonthOverdue = invoices.filter((inv) => {
@@ -118,7 +118,7 @@ export default function ModernDashboardStats({
     return (
       invDate.getMonth() === currentMonth &&
       invDate.getFullYear() === currentYear &&
-      inv.status === "OVERDUE"
+      inv.paymentStatus === "OVERDUE"
     );
   }).length;
 
@@ -127,7 +127,7 @@ export default function ModernDashboardStats({
     return (
       invDate.getMonth() === lastMonth &&
       invDate.getFullYear() === lastMonthYear &&
-      inv.status === "OVERDUE"
+      inv.paymentStatus === "OVERDUE"
     );
   }).length;
 
@@ -139,7 +139,7 @@ export default function ModernDashboardStats({
       : 0;
 
   const overdueInvoices = invoices.filter(
-    (inv) => inv.status === "OVERDUE"
+    (inv) => inv.paymentStatus === "OVERDUE"
   ).length;
 
   const formatCurrency = (amount: number) => {

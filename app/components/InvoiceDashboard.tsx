@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useMemo } from "react";
-import { InvoiceStatus } from "@prisma/client";
+import { InvoicePaymentStatus } from "@prisma/client";
 import { InvoiceWithDetails } from "../lib/types";
 import InvoiceFilters from "./InvoiceFilters";
 import InvoiceTable from "./InvoiceTable";
@@ -18,7 +18,7 @@ export default function InvoiceDashboard({
   isAdmin = true,
 }: InvoiceDashboardProps) {
   const [searchTerm, setSearchTerm] = useState("");
-  const [selectedStatus, setSelectedStatus] = useState<InvoiceStatus | "ALL">(
+  const [selectedStatus, setSelectedStatus] = useState<InvoicePaymentStatus | "ALL">(
     "ALL"
   );
   const [selectedCategory, setSelectedCategory] = useState("");
@@ -37,8 +37,8 @@ export default function InvoiceDashboard({
         if (!matchesSearch) return false;
       }
 
-      // Filtre par statut
-      if (selectedStatus !== "ALL" && invoice.status !== selectedStatus) {
+      // Filtre par statut de paiement
+      if (selectedStatus !== "ALL" && invoice.paymentStatus !== selectedStatus) {
         return false;
       }
 

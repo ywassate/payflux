@@ -1,14 +1,14 @@
 "use client";
 
-import { InvoiceStatus } from "@prisma/client";
-import { STATUS_LABELS } from "../lib/types";
+import { InvoicePaymentStatus } from "@prisma/client";
+import { PAYMENT_STATUS_LABELS } from "../lib/types";
 import { Search } from "lucide-react";
 
 interface InvoiceFiltersProps {
   searchTerm: string;
   setSearchTerm: (value: string) => void;
-  selectedStatus: InvoiceStatus | "ALL";
-  setSelectedStatus: (value: InvoiceStatus | "ALL") => void;
+  selectedStatus: InvoicePaymentStatus | "ALL";
+  setSelectedStatus: (value: InvoicePaymentStatus | "ALL") => void;
   selectedCategory: string;
   setSelectedCategory: (value: string) => void;
   categories: { id: string; name: string }[];
@@ -49,17 +49,17 @@ export default function InvoiceFilters({
         {/* Status */}
         <div>
           <label className="block text-sm font-medium text-secondary mb-2">
-            Statut
+            Statut de paiement
           </label>
           <select
             className="w-full px-4 py-2.5 border border-themed rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all appearance-none bg-card text-primary cursor-pointer"
             value={selectedStatus}
             onChange={(e) =>
-              setSelectedStatus(e.target.value as InvoiceStatus | "ALL")
+              setSelectedStatus(e.target.value as InvoicePaymentStatus | "ALL")
             }
           >
-            <option value="ALL" className="bg-card text-primary">Tous les status</option>
-            {Object.entries(STATUS_LABELS).map(([value, label]) => (
+            <option value="ALL" className="bg-card text-primary">Tous les statuts</option>
+            {Object.entries(PAYMENT_STATUS_LABELS).map(([value, label]) => (
               <option key={value} value={value} className="bg-card text-primary">
                 {label}
               </option>

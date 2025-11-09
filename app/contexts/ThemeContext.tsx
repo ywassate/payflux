@@ -13,10 +13,8 @@ const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 
 export function ThemeProvider({ children }: { children: ReactNode }) {
   const [theme, setTheme] = useState<Theme>("light");
-  const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
-    setMounted(true);
     const savedTheme = localStorage.getItem("theme") as Theme | null;
 
     if (savedTheme) {
@@ -34,11 +32,6 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
     const daisyTheme = newTheme === "dark" ? "payfluxDark" : "payflux";
     document.documentElement.setAttribute("data-theme", daisyTheme);
   };
-
-  // Éviter le flash de contenu lors du chargement
-  if (!mounted) {
-    return null;
-  }
 
   return (
     <ThemeContext.Provider value={{ theme, toggleTheme }}>

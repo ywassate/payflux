@@ -43,7 +43,8 @@ export default async function EditInvoicePage({
     dueDate: new Date(invoice.dueDate).toISOString().split("T")[0],
     vatActive: invoice.vatActive,
     vatRate: invoice.vatRate,
-    status: invoice.status,
+    lifecycle: invoice.lifecycle,
+    paymentStatus: invoice.paymentStatus,
     notes: invoice.notes || "",
     categoryId: invoice.categoryId || "",
     lines: invoice.lines.map((line) => ({

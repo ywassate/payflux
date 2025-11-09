@@ -1,4 +1,4 @@
-import { PrismaClient } from "@prisma/client";
+import { PrismaClient, InvoiceLifecycle, InvoicePaymentStatus } from "@prisma/client";
 
 const prisma = new PrismaClient();
 
@@ -43,14 +43,81 @@ async function main() {
   const allCategories = await prisma.category.findMany();
   console.log(`✅ ${allCategories.length} catégories créées`);
 
-  // Créer des factures de test pour chaque client
+  // Créer des factures de test pour chaque client avec différents états
   let invoiceCount = 0;
 
-  for (const client of clients) {
-    const statuses = ["PAID", "OVERDUE", "CANCELLED", "SENT", "DRAFT", "PARTIAL"];
+  // Définir les différents scénarios de factures
+  const invoiceScenarios: Array<{
+    lifecycle: InvoiceLifecycle;
+    paymentStatus: InvoicePaymentStatus;
+    sentAt: Date | null;
+    name: string;
+  }> = [
+    {
+      lifecycle: "DRAFT",
+      paymentStatus: "PENDING",
+      sentAt: null,
+      name: "Brouillon en préparation"
+    },
+    {
+      lifecycle: "APPROVED",
+      paymentStatus: "PENDING",
+      sentAt: null,
+      name: "Facture approuvée prête à envoyer"
+    },
+    {
+      lifecycle: "SENT",
+      paymentStatus: "PENDING",
+      sentAt: new Date(2025, 9, 15),
+      name: "Facture envoyée en attente de paiement"
+    },
+    {
+      lifecycle: "SENT",
+      paymentStatus: "PARTIAL",
+      sentAt: new Date(2025, 9, 10),
+      name: "Facture partiellement payée"
+    },
+    {
+      lifecycle: "SENT",
+      paymentStatus: "OVERDUE",
+      sentAt: new Date(2025, 8, 20),
+      name: "Facture en retard de paiement"
+    },
+    {
+      lifecycle: "SENT",
+      paymentStatus: "PROCESSING",
+      sentAt: new Date(2025, 9, 18),
+      name: "Facture en cours de traitement"
+    },
+    {
+      lifecycle: "CLOSED",
+      paymentStatus: "PAID",
+      sentAt: new Date(2025, 9, 5),
+      name: "Facture payée et clôturée"
+    },
+    {
+      lifecycle: "CLOSED",
+      paymentStatus: "CANCELLED",
+      sentAt: null,
+      name: "Facture annulée"
+    },
+    {
+      lifecycle: "SENT",
+      paymentStatus: "REJECTED",
+      sentAt: new Date(2025, 9, 12),
+      name: "Facture contestée par le client"
+    },
+    {
+      lifecycle: "CLOSED",
+      paymentStatus: "REFUNDED",
+      sentAt: new Date(2025, 9, 8),
+      name: "Facture remboursée"
+    },
+  ];
 
-    for (let i = 0; i < statuses.length; i++) {
-      const status = statuses[i] as any;
+  for (const client of clients) {
+    for (let i = 0; i < invoiceScenarios.length; i++) {
+      const scenario = invoiceScenarios[i];
       const randomCategory = allCategories[Math.floor(Math.random() * allCategories.length)];
 
       const invoiceNumber = `INV-2025-${String(invoiceCount + 1).padStart(4, "0")}`;
@@ -58,19 +125,21 @@ async function main() {
       const invoice = await prisma.invoice.create({
         data: {
           invoiceNumber,
-          name: `Facture ${status} - ${client.name}`,
+          name: `${scenario.name} - ${client.name}`,
           issuerName: "PayFlux SAS",
           issuerAddress: "123 Rue de la Tech, 75001 Paris",
           clientName: client.name,
           clientAddress: "456 Avenue Client, 75002 Paris",
           clientEmail: client.email,
           clientPhone: "+33 1 23 45 67 89",
-          invoiceDate: new Date(2025, 9, i + 1), // Octobre 2025
-          dueDate: new Date(2025, 10, i + 1), // Novembre 2025
+          invoiceDate: new Date(2025, 9, i + 1),
+          dueDate: new Date(2025, 10, i + 1),
+          sentAt: scenario.sentAt,
           vatActive: true,
           vatRate: 20,
-          status: status,
-          notes: `Facture de test avec statut ${status}`,
+          lifecycle: scenario.lifecycle,
+          paymentStatus: scenario.paymentStatus,
+          notes: `Facture de test: ${scenario.name}`,
           categoryId: randomCategory.id,
           userId: client.id,
           totalHT: 1000 + (i * 500),
@@ -89,7 +158,9 @@ async function main() {
       });
 
       invoiceCount++;
-      console.log(`✅ Facture créée: ${invoice.invoiceNumber} (${status}) pour ${client.name}`);
+      console.log(
+        `✅ Facture créée: ${invoice.invoiceNumber} (${scenario.lifecycle}/${scenario.paymentStatus}) pour ${client.name}`
+      );
     }
   }
 

@@ -30,17 +30,22 @@ model User {
 
 
 
-enum InvoiceStatus {
-  DRAFT
-  APPROVED
-  SENT
-  PARTIAL
-  PAID
-  OVERDUE
-  CANCELLED
-  REFUNDED
-  REJECTED
-  PROCESSING
+enum InvoiceLifecycle {
+  DRAFT      // En création
+  APPROVED   // Validée, prête à envoyer
+  SENT       // Envoyée au client
+  CLOSED     // Terminée (payée, annulée, etc.)
+}
+
+enum InvoicePaymentStatus {
+  PENDING    // En attente de paiement
+  PARTIAL    // Paiement partiel
+  PROCESSING // Paiement en cours de traitement
+  PAID       // Payée
+  OVERDUE    // En retard
+  CANCELLED  // Annulée
+  REFUNDED   // Remboursée
+  REJECTED   // Contestée par le client
 }
 
 model Category {
@@ -52,31 +57,33 @@ model Category {
 }
 
 model Invoice {
-  id            String        @id @default(uuid())
-  invoiceNumber String        @unique
+  id            String               @id @default(uuid())
+  invoiceNumber String               @unique
   name          String
-  issuerName    String        @default("")
-  issuerAddress String        @default("")
-  clientName    String        @default("")
-  clientAddress String        @default("")
-  clientEmail   String        @default("")
-  clientPhone   String        @default("")
-  invoiceDate   DateTime      @default(now())
+  issuerName    String               @default("")
+  issuerAddress String               @default("")
+  clientName    String               @default("")
+  clientAddress String               @default("")
+  clientEmail   String               @default("")
+  clientPhone   String               @default("")
+  invoiceDate   DateTime             @default(now())
   dueDate       DateTime
-  vatActive     Boolean       @default(false)
-  vatRate       Float         @default(20)
-  status        InvoiceStatus @default(DRAFT)
+  sentAt        DateTime?            // Date d'envoi au client
+  vatActive     Boolean              @default(false)
+  vatRate       Float                @default(20)
+  lifecycle     InvoiceLifecycle     @default(DRAFT)
+  paymentStatus InvoicePaymentStatus @default(PENDING)
   notes         String?
   categoryId    String?
-  category      Category?     @relation(fields: [categoryId], references: [id])
-  lines         InvoiceLine[] @relation("InvoiceLines")
+  category      Category?            @relation(fields: [categoryId], references: [id])
+  lines         InvoiceLine[]        @relation("InvoiceLines")
   userId        String
-  createdById   User          @relation("UserInvoices", fields: [userId], references: [id])
-  createdAt     DateTime      @default(now())
-  updatedAt     DateTime      @updatedAt
-  totalHT       Float         @default(0)
-  totalTVA      Float         @default(0)
-  totalTTC      Float         @default(0)
+  createdById   User                 @relation("UserInvoices", fields: [userId], references: [id])
+  createdAt     DateTime             @default(now())
+  updatedAt     DateTime             @updatedAt
+  totalHT       Float                @default(0)
+  totalTVA      Float                @default(0)
+  totalTTC      Float                @default(0)
 }
 
 model InvoiceLine {

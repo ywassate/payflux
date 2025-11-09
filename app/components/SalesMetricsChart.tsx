@@ -37,9 +37,9 @@ export default function SalesMetricsChart({
         }),
         fullDate: date,
         total: monthInvoices.length,
-        paid: monthInvoices.filter((inv) => inv.status === "PAID").length,
+        paid: monthInvoices.filter((inv) => inv.paymentStatus === "PAID").length,
         revenue: monthInvoices
-          .filter((inv) => inv.status === "PAID")
+          .filter((inv) => inv.paymentStatus === "PAID")
           .reduce((sum, inv) => sum + inv.totalTTC, 0),
       });
     }
@@ -62,9 +62,9 @@ export default function SalesMetricsChart({
         label: year.toString(),
         fullDate: new Date(year, 0, 1),
         total: yearInvoices.length,
-        paid: yearInvoices.filter((inv) => inv.status === "PAID").length,
+        paid: yearInvoices.filter((inv) => inv.paymentStatus === "PAID").length,
         revenue: yearInvoices
-          .filter((inv) => inv.status === "PAID")
+          .filter((inv) => inv.paymentStatus === "PAID")
           .reduce((sum, inv) => sum + inv.totalTTC, 0),
       });
     }

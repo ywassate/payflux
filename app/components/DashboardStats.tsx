@@ -21,20 +21,20 @@ export default function DashboardStats({ invoices }: DashboardStatsProps) {
 
   // Calculs des statistiques
   const totalInvoices = invoices.length;
-  const paidInvoices = invoices.filter((inv) => inv.status === "PAID").length;
+  const paidInvoices = invoices.filter((inv) => inv.paymentStatus === "PAID").length;
   const pendingInvoices = invoices.filter(
-    (inv) => inv.status === "SENT" || inv.status === "APPROVED"
+    (inv) => inv.lifecycle === "SENT" && (inv.paymentStatus === "PENDING" || inv.paymentStatus === "PARTIAL")
   ).length;
   const overdueInvoices = invoices.filter(
-    (inv) => inv.status === "OVERDUE"
+    (inv) => inv.paymentStatus === "OVERDUE"
   ).length;
 
   const totalRevenue = invoices
-    .filter((inv) => inv.status === "PAID")
+    .filter((inv) => inv.paymentStatus === "PAID")
     .reduce((sum, inv) => sum + inv.totalTTC, 0);
 
   const pendingAmount = invoices
-    .filter((inv) => inv.status === "SENT" || inv.status === "APPROVED")
+    .filter((inv) => inv.lifecycle === "SENT" && (inv.paymentStatus === "PENDING" || inv.paymentStatus === "PARTIAL"))
     .reduce((sum, inv) => sum + inv.totalTTC, 0);
 
   // Calcul du mois précédent pour la comparaison

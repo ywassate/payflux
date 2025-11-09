@@ -25,7 +25,7 @@ export default function RevenueChart({ invoices }: RevenueChartProps) {
     const monthRevenue = invoices
       .filter((inv) => {
         const invDate = new Date(inv.invoiceDate);
-        return invDate.getMonth() === month.index && inv.status === "PAID";
+        return invDate.getMonth() === month.index && inv.paymentStatus === "PAID";
       })
       .reduce((sum, inv) => sum + inv.totalTTC, 0);
 

@@ -48,14 +48,33 @@ export default async function Home() {
     const adminEmails = process.env.ADMIN_EMAILS?.split(",").map((e) => e.trim().toLowerCase()) || [];
     const isAdminEmail = adminEmails.includes(email.toLowerCase());
 
-    user = await prisma.user.create({
-      data: {
-        id: sessionUser.id,
-        email,
-        name,
-        role: isAdminEmail ? "ADMIN" : "CLIENT",
-      },
-    });
+    try {
+      user = await prisma.user.create({
+        data: {
+          id: sessionUser.id,
+          email,
+          name,
+          role: isAdminEmail ? "ADMIN" : "CLIENT",
+        },
+      });
+    } catch (error: any) {
+      // Si l'utilisateur existe déjà (par email), le récupérer
+      if (error.code === "P2002") {
+        user = await prisma.user.findUnique({
+          where: { email },
+        });
+
+        // Si trouvé par email, mettre à jour l'ID Clerk
+        if (user && user.id !== sessionUser.id) {
+          user = await prisma.user.update({
+            where: { email },
+            data: { id: sessionUser.id },
+          });
+        }
+      } else {
+        throw error;
+      }
+    }
   }
 
   const invoices = await getInvoices(

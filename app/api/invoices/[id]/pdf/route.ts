@@ -6,10 +6,11 @@ import { Readable } from "stream";
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const invoice = await getInvoiceById(params.id);
+    const { id } = await params;
+    const invoice = await getInvoiceById(id);
 
     if (!invoice) {
       return NextResponse.json(
@@ -37,7 +38,7 @@ export async function GET(
     return new NextResponse(buffer, {
       headers: {
         "Content-Type": "application/pdf",
-        "Content-Disposition": `attachment; filename="${invoice.invoiceNumber}.pdf"`,
+        "Content-Disposition": `inline; filename="${invoice.invoiceNumber}.pdf"`,
       },
     });
   } catch (error) {

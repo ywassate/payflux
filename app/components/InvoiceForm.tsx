@@ -1,9 +1,9 @@
 "use client";
 
 import { useState } from "react";
-import { InvoiceStatus } from "@prisma/client";
+import { InvoiceLifecycle, InvoicePaymentStatus } from "@prisma/client";
 import { Plus, Trash2, Save, Download, Eye, Calendar, User, Building2, Info } from "lucide-react";
-import { STATUS_LABELS } from "../lib/types";
+import { LIFECYCLE_LABELS, PAYMENT_STATUS_LABELS } from "../lib/types";
 import { createInvoice } from "../invoices/new/actions";
 import { updateInvoiceAction } from "../invoices/[id]/actions";
 
@@ -27,7 +27,8 @@ interface InvoiceFormData {
   dueDate: string;
   vatActive: boolean;
   vatRate: number;
-  status: InvoiceStatus;
+  lifecycle: InvoiceLifecycle;
+  paymentStatus: InvoicePaymentStatus;
   notes: string;
   categoryId: string;
   lines: InvoiceLine[];
@@ -62,7 +63,8 @@ export default function InvoiceForm({
         .split("T")[0],
     vatActive: initialData?.vatActive ?? false,
     vatRate: initialData?.vatRate || 20,
-    status: initialData?.status || InvoiceStatus.DRAFT,
+    lifecycle: initialData?.lifecycle || InvoiceLifecycle.DRAFT,
+    paymentStatus: initialData?.paymentStatus || InvoicePaymentStatus.PENDING,
     notes: initialData?.notes || "",
     categoryId: initialData?.categoryId || "",
     lines: initialData?.lines || [
@@ -282,26 +284,49 @@ export default function InvoiceForm({
               </label>
             </div>
 
-            <div className="relative group md:col-span-2">
+            <div className="relative group">
               <select
-                id="status"
+                id="lifecycle"
                 className="peer w-full px-4 py-3.5 border-2 border-themed rounded-xl focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 transition-all duration-200 outline-none appearance-none bg-card"
-                value={formData.status}
+                value={formData.lifecycle}
                 onChange={(e) =>
-                  handleChange("status", e.target.value as InvoiceStatus)
+                  handleChange("lifecycle", e.target.value as InvoiceLifecycle)
                 }
               >
-                {Object.entries(STATUS_LABELS).map(([value, label]) => (
+                {Object.entries(LIFECYCLE_LABELS).map(([value, label]) => (
                   <option key={value} value={value}>
                     {label}
                   </option>
                 ))}
               </select>
               <label
-                htmlFor="status"
+                htmlFor="lifecycle"
                 className="absolute left-4 -top-2.5 bg-card px-2 text-sm font-semibold text-secondary"
               >
-                Statut
+                Cycle de vie
+              </label>
+            </div>
+
+            <div className="relative group">
+              <select
+                id="paymentStatus"
+                className="peer w-full px-4 py-3.5 border-2 border-themed rounded-xl focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 transition-all duration-200 outline-none appearance-none bg-card"
+                value={formData.paymentStatus}
+                onChange={(e) =>
+                  handleChange("paymentStatus", e.target.value as InvoicePaymentStatus)
+                }
+              >
+                {Object.entries(PAYMENT_STATUS_LABELS).map(([value, label]) => (
+                  <option key={value} value={value}>
+                    {label}
+                  </option>
+                ))}
+              </select>
+              <label
+                htmlFor="paymentStatus"
+                className="absolute left-4 -top-2.5 bg-card px-2 text-sm font-semibold text-secondary"
+              >
+                Statut de paiement
               </label>
             </div>
           </div>

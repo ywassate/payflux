@@ -159,30 +159,44 @@ const formatCurrency = (amount: number) => {
   }).format(amount);
 };
 
-const STATUS_COLORS: Record<string, { bg: string; text: string }> = {
+// Couleurs pour le cycle de vie
+const LIFECYCLE_COLORS: Record<string, { bg: string; text: string }> = {
   DRAFT: { bg: "#f1f5f9", text: "#475569" },
   APPROVED: { bg: "#dbeafe", text: "#1e40af" },
   SENT: { bg: "#e0e7ff", text: "#4338ca" },
-  PARTIAL: { bg: "#fef3c7", text: "#92400e" },
+  CLOSED: { bg: "#f1f5f9", text: "#475569" },
+};
+
+// Couleurs pour le statut de paiement
+const PAYMENT_STATUS_COLORS: Record<string, { bg: string; text: string }> = {
+  PENDING: { bg: "#fef3c7", text: "#92400e" },
+  PARTIAL: { bg: "#fed7aa", text: "#9a3412" },
+  PROCESSING: { bg: "#dbeafe", text: "#1e40af" },
   PAID: { bg: "#d1fae5", text: "#065f46" },
   OVERDUE: { bg: "#fee2e2", text: "#991b1b" },
   CANCELLED: { bg: "#f1f5f9", text: "#475569" },
-  REFUNDED: { bg: "#e0e7ff", text: "#5b21b6" },
+  REFUNDED: { bg: "#e9d5ff", text: "#5b21b6" },
   REJECTED: { bg: "#fee2e2", text: "#991b1b" },
-  PROCESSING: { bg: "#fbcfe8", text: "#831843" },
 };
 
-const STATUS_LABELS: Record<string, string> = {
+// Labels pour le cycle de vie
+const LIFECYCLE_LABELS: Record<string, string> = {
   DRAFT: "Brouillon",
   APPROVED: "Approuvée",
   SENT: "Envoyée",
-  PARTIAL: "Partiellement payée",
+  CLOSED: "Clôturée",
+};
+
+// Labels pour le statut de paiement
+const PAYMENT_STATUS_LABELS: Record<string, string> = {
+  PENDING: "En attente",
+  PARTIAL: "Paiement partiel",
+  PROCESSING: "En traitement",
   PAID: "Payée",
   OVERDUE: "En retard",
   CANCELLED: "Annulée",
   REFUNDED: "Remboursée",
-  REJECTED: "Rejetée",
-  PROCESSING: "En traitement",
+  REJECTED: "Contestée",
 };
 
 export const InvoicePDFTemplate = ({
@@ -205,11 +219,20 @@ export const InvoicePDFTemplate = ({
           <View
             style={{
               ...styles.statusBadge,
-              backgroundColor: STATUS_COLORS[invoice.status]?.bg || "#f1f5f9",
-              color: STATUS_COLORS[invoice.status]?.text || "#475569",
+              backgroundColor: LIFECYCLE_COLORS[invoice.lifecycle]?.bg || "#f1f5f9",
+              color: LIFECYCLE_COLORS[invoice.lifecycle]?.text || "#475569",
             }}
           >
-            <Text>{STATUS_LABELS[invoice.status] || invoice.status}</Text>
+            <Text>{LIFECYCLE_LABELS[invoice.lifecycle] || invoice.lifecycle}</Text>
+          </View>
+          <View
+            style={{
+              ...styles.statusBadge,
+              backgroundColor: PAYMENT_STATUS_COLORS[invoice.paymentStatus]?.bg || "#f1f5f9",
+              color: PAYMENT_STATUS_COLORS[invoice.paymentStatus]?.text || "#475569",
+            }}
+          >
+            <Text>{PAYMENT_STATUS_LABELS[invoice.paymentStatus] || invoice.paymentStatus}</Text>
           </View>
         </View>
       </View>

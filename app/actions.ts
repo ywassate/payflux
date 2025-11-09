@@ -1,6 +1,6 @@
 "use server";
 
-import { PrismaClient, InvoiceStatus } from "@prisma/client";
+import { PrismaClient, InvoiceLifecycle, InvoicePaymentStatus } from "@prisma/client";
 import { revalidatePath } from "next/cache";
 
 const prisma = new PrismaClient();
@@ -72,7 +72,8 @@ export async function addEmptyInvoice(email: string, name: string) {
         dueDate,
         vatActive: false,
         vatRate: 20,
-        status: InvoiceStatus.DRAFT,
+        lifecycle: InvoiceLifecycle.DRAFT,
+        paymentStatus: InvoicePaymentStatus.PENDING,
         userId: user.id,
       },
     });
@@ -87,7 +88,8 @@ export async function addEmptyInvoice(email: string, name: string) {
 
 // Récupérer toutes les factures avec filtres
 export async function getInvoices(filters?: {
-  status?: InvoiceStatus;
+  lifecycle?: InvoiceLifecycle;
+  paymentStatus?: InvoicePaymentStatus;
   search?: string;
   categoryId?: string;
   userId?: string;
@@ -99,8 +101,12 @@ export async function getInvoices(filters?: {
       where.userId = filters.userId;
     }
 
-    if (filters?.status) {
-      where.status = filters.status;
+    if (filters?.lifecycle) {
+      where.lifecycle = filters.lifecycle;
+    }
+
+    if (filters?.paymentStatus) {
+      where.paymentStatus = filters.paymentStatus;
     }
 
     if (filters?.categoryId) {
@@ -173,7 +179,8 @@ export async function updateInvoice(
     dueDate?: Date;
     vatActive?: boolean;
     vatRate?: number;
-    status?: InvoiceStatus;
+    lifecycle?: InvoiceLifecycle;
+    paymentStatus?: InvoicePaymentStatus;
     notes?: string;
     categoryId?: string | null;
   }
@@ -348,17 +355,107 @@ export async function getCategories() {
 }
 
 // Changer le statut d'une facture
-export async function changeInvoiceStatus(id: string, status: InvoiceStatus) {
+export async function changeInvoiceStatus(id: string, lifecycle: InvoiceLifecycle, paymentStatus: InvoicePaymentStatus) {
   try {
+    // Récupérer l'ancien état de la facture
+    const oldInvoice = await prisma.invoice.findUnique({
+      where: { id },
+      include: {
+        createdById: true,
+      }
+    });
+
+    if (!oldInvoice) {
+      throw new Error("Invoice not found");
+    }
+
+    // Préparer les données de mise à jour
+    const updateData: {
+      lifecycle: InvoiceLifecycle;
+      paymentStatus: InvoicePaymentStatus;
+      sentAt?: Date;
+    } = { lifecycle, paymentStatus };
+
+    // Si le lifecycle passe à SENT et n'était pas SENT avant, définir sentAt
+    if (lifecycle === "SENT" && oldInvoice.lifecycle !== "SENT" && !oldInvoice.sentAt) {
+      updateData.sentAt = new Date();
+    }
+
+    // Mettre à jour la facture
     const invoice = await prisma.invoice.update({
       where: { id },
-      data: { status },
+      data: updateData,
+      include: {
+        createdById: true,
+      }
     });
+
+    // Envoyer les emails si nécessaire (en arrière-plan, sans bloquer)
+    sendInvoiceStatusEmails(oldInvoice, invoice).catch(error => {
+      console.error("Error sending status change emails:", error);
+    });
+
     revalidatePath("/");
     return invoice;
   } catch (error) {
     console.error("Error changing invoice status:", error);
     throw error;
+  }
+}
+
+// Fonction d'envoi d'emails selon les changements de statut
+async function sendInvoiceStatusEmails(
+  oldInvoice: { lifecycle: InvoiceLifecycle; paymentStatus: InvoicePaymentStatus; clientEmail: string },
+  newInvoice: {
+    id: string;
+    invoiceNumber: string;
+    lifecycle: InvoiceLifecycle;
+    paymentStatus: InvoicePaymentStatus;
+    clientName: string;
+    clientEmail: string;
+    totalTTC: number;
+    dueDate: Date;
+    createdById: { name: string; email: string };
+  }
+) {
+  if (!newInvoice.clientEmail) {
+    console.log("No client email, skipping status emails");
+    return;
+  }
+
+  const baseUrl = process.env.NEXT_PUBLIC_APP_URL || "https://payflux.com";
+  const invoiceUrl = `${baseUrl}/invoices/${newInvoice.id}`;
+  const pdfUrl = `${baseUrl}/api/invoices/${newInvoice.id}/pdf`;
+
+  // Import dynamique pour éviter les problèmes de dépendances circulaires
+  const { sendInvoiceSentEmail, sendInvoicePaidEmail } = await import("./lib/email/send-emails");
+
+  // Email de facture envoyée (lifecycle passe à SENT)
+  if (newInvoice.lifecycle === "SENT" && oldInvoice.lifecycle !== "SENT") {
+    console.log(`Sending invoice sent email for ${newInvoice.invoiceNumber}`);
+    await sendInvoiceSentEmail({
+      to: newInvoice.clientEmail,
+      invoiceNumber: newInvoice.invoiceNumber,
+      clientName: newInvoice.clientName,
+      totalTTC: newInvoice.totalTTC,
+      dueDate: newInvoice.dueDate.toISOString(),
+      invoiceUrl,
+      pdfUrl,
+    });
+  }
+
+  // Email de confirmation de paiement (paymentStatus passe à PAID)
+  if (newInvoice.paymentStatus === "PAID" && oldInvoice.paymentStatus !== "PAID") {
+    console.log(`Sending invoice paid email for ${newInvoice.invoiceNumber}`);
+    await sendInvoicePaidEmail({
+      to: newInvoice.clientEmail,
+      invoiceNumber: newInvoice.invoiceNumber,
+      clientName: newInvoice.clientName,
+      totalTTC: newInvoice.totalTTC,
+      paidDate: new Date().toISOString(),
+      invoiceUrl,
+      pdfUrl,
+    });
   }
 }
 

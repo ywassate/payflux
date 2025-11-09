@@ -1,6 +1,6 @@
 "use client";
 
-import { InvoiceWithDetails, STATUS_LABELS, STATUS_COLORS } from "../lib/types";
+import { InvoiceWithDetails, getInvoiceDisplayStatus, getInvoiceDisplayColor } from "../lib/types";
 import { ArrowRight, FileText } from "lucide-react";
 import Link from "next/link";
 
@@ -68,11 +68,11 @@ export default function RecentInvoices({ invoices }: RecentInvoicesProps) {
                   {formatDate(invoice.invoiceDate)}
                 </p>
                 <span
-                  className={`badge badge-sm ${
-                    STATUS_COLORS[invoice.status]
+                  className={`px-2.5 py-1 text-xs font-semibold rounded-lg border ${
+                    getInvoiceDisplayColor(invoice)
                   }`}
                 >
-                  {STATUS_LABELS[invoice.status]}
+                  {getInvoiceDisplayStatus(invoice)}
                 </span>
               </div>
             </Link>

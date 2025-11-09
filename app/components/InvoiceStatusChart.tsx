@@ -1,7 +1,8 @@
 "use client";
 
-import { InvoiceWithDetails, STATUS_LABELS } from "../lib/types";
+import { InvoiceWithDetails, PAYMENT_STATUS_LABELS } from "../lib/types";
 import { FileText } from "lucide-react";
+import { InvoicePaymentStatus } from "@prisma/client";
 
 interface InvoiceStatusChartProps {
   invoices: InvoiceWithDetails[];
@@ -9,11 +10,17 @@ interface InvoiceStatusChartProps {
 }
 
 export default function InvoiceStatusChart({ invoices, isAdmin = true }: InvoiceStatusChartProps) {
-  // Initialiser tous les statuts avec 0
-  // Pour les clients, on affiche seulement PAID, OVERDUE, CANCELLED
-  const allStatuses = isAdmin
-    ? ["DRAFT", "SENT", "PAID", "OVERDUE", "CANCELLED"]
-    : ["PAID", "OVERDUE", "CANCELLED"];
+  // Afficher la distribution des statuts de paiement
+  const allStatuses: InvoicePaymentStatus[] = [
+    "PENDING",
+    "PARTIAL",
+    "PROCESSING",
+    "PAID",
+    "OVERDUE",
+    "CANCELLED",
+    "REFUNDED",
+    "REJECTED"
+  ];
 
   const statusData = allStatuses.reduce((acc, status) => {
     acc[status] = { count: 0, total: 0 };
@@ -22,7 +29,7 @@ export default function InvoiceStatusChart({ invoices, isAdmin = true }: Invoice
 
   // Remplir avec les données réelles
   invoices.forEach((invoice) => {
-    const status = invoice.status;
+    const status = invoice.paymentStatus;
     if (statusData[status]) {
       statusData[status].count += 1;
       statusData[status].total += invoice.totalTTC;
@@ -31,20 +38,23 @@ export default function InvoiceStatusChart({ invoices, isAdmin = true }: Invoice
 
   const statuses = allStatuses.map((status) => ({
     status,
-    label: STATUS_LABELS[status as keyof typeof STATUS_LABELS],
+    label: PAYMENT_STATUS_LABELS[status],
     count: statusData[status].count,
     total: statusData[status].total,
   }));
 
   const totalInvoices = invoices.length;
 
-  // Couleurs pour chaque statut
+  // Couleurs pour chaque statut de paiement
   const statusColors: Record<string, { color: string }> = {
-    DRAFT: { color: "#f59e0b" }, // amber-500
-    SENT: { color: "#3b82f6" }, // blue-500
+    PENDING: { color: "#eab308" }, // yellow-500
+    PARTIAL: { color: "#f97316" }, // orange-500
+    PROCESSING: { color: "#3b82f6" }, // blue-500
     PAID: { color: "#22c55e" }, // green-500
     OVERDUE: { color: "#ef4444" }, // red-500
     CANCELLED: { color: "#6b7280" }, // gray-500
+    REFUNDED: { color: "#a855f7" }, // purple-500
+    REJECTED: { color: "#dc2626" }, // red-600
   };
 
   const formatCurrency = (amount: number) => {

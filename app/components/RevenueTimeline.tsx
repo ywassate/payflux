@@ -38,7 +38,7 @@ export default function RevenueTimeline({ invoices }: RevenueTimelineProps) {
   // Filtrer les factures payées dans la période
   const filteredInvoices = invoices.filter((inv) => {
     const invDate = new Date(inv.invoiceDate);
-    return invDate >= start && invDate <= end && inv.status === "PAID";
+    return invDate >= start && invDate <= end && inv.paymentStatus === "PAID";
   });
 
   // Calculer les revenus par période

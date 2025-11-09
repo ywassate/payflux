@@ -1,6 +1,6 @@
 "use client";
 
-import { InvoiceWithDetails, STATUS_LABELS, STATUS_COLORS } from "../lib/types";
+import { InvoiceWithDetails, getInvoiceDisplayStatus, getInvoiceDisplayColor } from "../lib/types";
 import { Eye, Download, MessageSquare, AlertCircle, CreditCard } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
@@ -84,10 +84,10 @@ export default function ClientInvoiceTable({ invoices, currentUserId }: ClientIn
               <div className="flex items-center">
                 <span
                   className={`px-2.5 py-1 text-xs font-semibold rounded-lg border truncate w-full text-center ${
-                    STATUS_COLORS[invoice.status]
+                    getInvoiceDisplayColor(invoice)
                   }`}
                 >
-                  {STATUS_LABELS[invoice.status]}
+                  {getInvoiceDisplayStatus(invoice)}
                 </span>
               </div>
 
@@ -126,7 +126,7 @@ export default function ClientInvoiceTable({ invoices, currentUserId }: ClientIn
                   <Download className="h-4 w-4 text-purple-600 dark:text-purple-400" />
                 </a>
 
-                {(invoice.status === "SENT" || invoice.status === "PARTIAL") && (
+                {(invoice.lifecycle === "SENT" && (invoice.paymentStatus === "PENDING" || invoice.paymentStatus === "PARTIAL")) && (
                   <button
                     className="p-2 rounded-lg hover:bg-amber-50 dark:hover:bg-amber-500/10 transition-colors group"
                     title="Contester la facture"
@@ -139,7 +139,7 @@ export default function ClientInvoiceTable({ invoices, currentUserId }: ClientIn
                   </button>
                 )}
 
-                {(invoice.status === "SENT" || invoice.status === "PARTIAL" || invoice.status === "OVERDUE") && (
+                {(invoice.lifecycle === "SENT" && (invoice.paymentStatus === "PENDING" || invoice.paymentStatus === "PARTIAL" || invoice.paymentStatus === "OVERDUE")) && (
                   <button
                     className="p-2 rounded-lg hover:bg-teal-50 dark:hover:bg-teal-500/10 transition-colors group"
                     title="Régler la facture"

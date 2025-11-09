@@ -14,12 +14,12 @@ interface InvoiceStatsProps {
 
 export default function InvoiceStats({ invoices }: InvoiceStatsProps) {
   const totalInvoices = invoices.length;
-  const paidInvoices = invoices.filter((inv) => inv.status === "PAID").length;
+  const paidInvoices = invoices.filter((inv) => inv.paymentStatus === "PAID").length;
   const overdueInvoices = invoices.filter(
-    (inv) => inv.status === "OVERDUE"
+    (inv) => inv.paymentStatus === "OVERDUE"
   ).length;
   const totalRevenue = invoices
-    .filter((inv) => inv.status === "PAID")
+    .filter((inv) => inv.paymentStatus === "PAID")
     .reduce((sum, inv) => sum + inv.totalTTC, 0);
 
   const formatCurrency = (amount: number) => {

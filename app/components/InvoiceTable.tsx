@@ -1,9 +1,9 @@
 "use client";
 
-import { InvoiceWithDetails, STATUS_LABELS, STATUS_COLORS } from "../lib/types";
+import { InvoiceWithDetails, LIFECYCLE_LABELS, PAYMENT_STATUS_LABELS, getInvoiceDisplayStatus, getInvoiceDisplayColor } from "../lib/types";
 import { Trash2, Eye, MoreVertical, Download, Check, MessageSquare } from "lucide-react";
 import { deleteInvoice, changeInvoiceStatus } from "../actions";
-import { InvoiceStatus } from "@prisma/client";
+import { InvoiceLifecycle, InvoicePaymentStatus } from "@prisma/client";
 import { useState } from "react";
 import Link from "next/link";
 
@@ -46,11 +46,11 @@ export default function InvoiceTable({ invoices, isAdmin = true }: InvoiceTableP
     }
   };
 
-  const handleStatusChange = async (id: string, status: InvoiceStatus) => {
+  const handleStatusChange = async (id: string, lifecycle: InvoiceLifecycle, paymentStatus: InvoicePaymentStatus) => {
     setLoadingId(id);
     setOpenStatusDropdown(null);
     try {
-      await changeInvoiceStatus(id, status);
+      await changeInvoiceStatus(id, lifecycle, paymentStatus);
       window.location.reload();
     } catch (error) {
       console.error("Erreur lors du changement de statut:", error);
@@ -144,10 +144,10 @@ export default function InvoiceTable({ invoices, isAdmin = true }: InvoiceTableP
                   }
                   disabled={loadingId === invoice.id}
                   className={`px-2.5 py-1 text-xs font-semibold rounded-lg border transition-all duration-200 hover:opacity-80 truncate w-full text-left ${
-                    STATUS_COLORS[invoice.status]
+                    getInvoiceDisplayColor(invoice)
                   }`}
                 >
-                  {STATUS_LABELS[invoice.status]}
+                  {getInvoiceDisplayStatus(invoice)}
                 </button>
 
                 {/* Dropdown du statut */}
@@ -157,22 +157,47 @@ export default function InvoiceTable({ invoices, isAdmin = true }: InvoiceTableP
                       className="fixed inset-0 z-[100]"
                       onClick={() => setOpenStatusDropdown(null)}
                     />
-                    <div className="absolute left-0 top-full mt-2 w-56 bg-card rounded-xl border border-themed shadow-xl z-[110] py-2">
-                      {Object.entries(STATUS_LABELS).map(([status, label]) => (
+                    <div className="absolute left-0 top-full mt-2 w-64 bg-card rounded-xl border border-themed shadow-xl z-[110] py-2">
+                      <div className="px-4 py-2 border-b border-themed">
+                        <p className="text-xs font-semibold text-muted uppercase">Cycle de vie</p>
+                      </div>
+                      {Object.entries(LIFECYCLE_LABELS).map(([lifecycle, label]) => (
                         <button
-                          key={status}
+                          key={lifecycle}
                           onClick={() =>
-                            handleStatusChange(invoice.id, status as InvoiceStatus)
+                            handleStatusChange(invoice.id, lifecycle as InvoiceLifecycle, invoice.paymentStatus)
                           }
                           disabled={loadingId === invoice.id}
                           className={`w-full px-4 py-2.5 text-left text-sm hover:bg-base-200 transition-colors duration-150 flex items-center justify-between ${
-                            invoice.status === status
+                            invoice.lifecycle === lifecycle
                               ? "bg-base-200 text-primary font-medium"
                               : "text-secondary"
                           }`}
                         >
                           <span>{label}</span>
-                          {invoice.status === status && (
+                          {invoice.lifecycle === lifecycle && (
+                            <Check className="h-4 w-4 text-blue-500" />
+                          )}
+                        </button>
+                      ))}
+                      <div className="px-4 py-2 border-b border-t border-themed mt-2">
+                        <p className="text-xs font-semibold text-muted uppercase">Statut de paiement</p>
+                      </div>
+                      {Object.entries(PAYMENT_STATUS_LABELS).map(([paymentStatus, label]) => (
+                        <button
+                          key={paymentStatus}
+                          onClick={() =>
+                            handleStatusChange(invoice.id, invoice.lifecycle, paymentStatus as InvoicePaymentStatus)
+                          }
+                          disabled={loadingId === invoice.id}
+                          className={`w-full px-4 py-2.5 text-left text-sm hover:bg-base-200 transition-colors duration-150 flex items-center justify-between ${
+                            invoice.paymentStatus === paymentStatus
+                              ? "bg-base-200 text-primary font-medium"
+                              : "text-secondary"
+                          }`}
+                        >
+                          <span>{label}</span>
+                          {invoice.paymentStatus === paymentStatus && (
                             <Check className="h-4 w-4 text-blue-500" />
                           )}
                         </button>

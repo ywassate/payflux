@@ -37,14 +37,14 @@ export default async function InvoicesPage() {
 
   // Récupérer les factures
   // Admin: toutes les factures
-  // Client: seulement les factures payées, en retard ou annulées (pas DRAFT, SENT, PARTIAL)
+  // Client: factures avec lifecycle=SENT ou lifecycle=CLOSED (tous paymentStatus)
   const invoices = await prisma.invoice.findMany({
     where: isAdmin
       ? {}
       : {
           userId: userId,
-          status: {
-            in: ["PAID", "OVERDUE", "CANCELLED"]
+          lifecycle: {
+            in: ["SENT", "CLOSED"]
           }
         },
     include: {
